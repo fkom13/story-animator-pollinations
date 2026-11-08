@@ -130,3 +130,10 @@ test("quest strict blocks live model that switched to paidOnly",async()=>{
   assert.match((await r.json()).message,/Aucun modèle adapté disponible : i2i/);
 });
 
+test("invalid JSON returns controlled 400 Responses error",async()=>{
+  const r=await agent({...mocks(),request:new Request("https://example.com/v1/responses",{method:"POST",headers:{"Content-Type":"application/json"},body:"not json"})});
+  assert.equal(r.status,400);
+  const data=await r.json();
+  assert.equal(data.object,"response");
+  assert.match(data.output[0].content[0].text,/Requête JSON attendue/);
+});

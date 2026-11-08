@@ -259,7 +259,7 @@ function productionInstructions(plan,selected) {
 }
 export default async function agent({ model, respond, mcp, pollinations, request }) {
   let payload;
-  try {payload=await request.clone().json();} catch {return say("Requête JSON attendue.",400);}
+  try {payload=await request.clone().json();} catch {return reply("Requête JSON attendue.",400);}
   const say=(message,status)=>reply(message,status,Boolean(payload?.stream));
   const history=getMessages(payload);
   const message=lastUser(history).trim();
