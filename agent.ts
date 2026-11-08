@@ -97,11 +97,14 @@ function scoreModel(m,role,tier,stat,bench){
  if(role==="classifier"&&m.id.includes("jev"))score+=0.2;
  if(role==="director"&&(m.context_length||0)>100000)score+=0.025;
  if(role==="vision"&&m.input_modalities?.includes("image"))score+=0.03;
+ if(["t2i","i2i"].includes(role)&&!Object.prototype.hasOwnProperty.call(EDITORIAL_PRIOR,m.id))score-=0.19;
+ if(["t2i","i2i","tts","stt"].includes(role)&&p===null)score-=0.08;
  return rnd(score,5);
 }
 function rankModels(data,role,tier,key,stats,bench){
  const all=[];
  for(const m of data){
+  if(m.community===true||m.id.startsWith("community/"))continue;
   if(!eligible(m,role)||(!TIERS[tier].paid&&m.paid_only!==false)||permission(key,m)==="denied")continue;
   if(m.health?.status==="down")continue;
   const h=health(m,stats);
