@@ -6,11 +6,13 @@ const source = await readFile(new URL("../agent.ts",import.meta.url),"utf8");
 const {default:agent} = await import("data:text/javascript;base64,"+Buffer.from(source).toString("base64"));
 const models = [
   ["minimax/minimax-m3.1-flash",["text"],["text"],["/v1/chat/completions"]],
+  ["deepseek/deepseek-v4.1-flash",["text"],["text"],["/v1/chat/completions"]],
+  ["openai/gpt-5.4-nano",["text"],["text"],["/v1/chat/completions"]],
   ["black-forest-labs/flux.1-schnell",["text"],["image"],["/v1/images/generations"]],
   ["black-forest-labs/flux.2-klein-4b",["text","image"],["image"],["/v1/images/generations","/v1/images/edits"]],
   ["microsoft/mai-voice-2.1-flash",["text"],["audio"],["/v1/audio/speech"]],
   ["microsoft/mai-transcribe-2",["audio"],["text"],["/v1/audio/transcriptions"]]
-].map(([id,input_modalities,output_modalities,supported_endpoints])=>({id,input_modalities,output_modalities,supported_endpoints,paid_only:false}));
+].map(([id,input_modalities,output_modalities,supported_endpoints])=>({id,input_modalities,output_modalities,supported_endpoints,paid_only:false,capabilities:output_modalities.includes("text")?["tool_calling"]:[]}));
 const plan="[[STORY_PLAN:ABCDEF12|MODE:quest|DURATION:15|SCENES:3|BUDGET:0.25]]";
 const preflight="[[PREFLIGHT_OK:ABCDEF12]]";
 function mocks({limit=2,quest=1,toolAccess=true,keyModels=["text","image","audio"],accountUsage=true}={}) {
@@ -41,7 +43,7 @@ const user=(content)=>({role:"user",content});
 const assistant=(content)=>({role:"assistant",content});
 test("onboarding: no media tools provided, low-cost text model", async()=>{
   const r=await invoke([user("Une histoire drôle de robot")]);
-  assert.equal(r.model.model,"minimax/minimax-m3.1-flash");
+  assert.equal(r.model.model,"deepseek/deepseek-v4.1-flash");
   assert.equal(r.tools,undefined);
   assert.match(r.instructions,/15 secondes/);
 });
@@ -54,9 +56,9 @@ test("preflight blocks when current key budget is insufficient",async()=>{
   const r=await invoke([assistant(plan),user("PRODUIRE ABCDEF12")],mocks({limit:0.1}));
   assert.match((await r.json()).message,/Budget de clé insuffisant/);
 });
-test("quest strict blocks paid leakage when quest balance is missing",async()=>{
+test("quest first continues when a delegated token hides Quest balance",async()=>{
   const r=await invoke([assistant(plan),user("PRODUIRE ABCDEF12")],mocks({accountUsage:false}));
-  assert.match((await r.json()).message,/solde Quest non visible/i);
+  assert.match((await r.json()).message,/PREFLIGHT_OK/);
 });
 test("preflight blocks restricted image keys",async()=>{
   const r=await invoke([assistant(plan),user("PRODUIRE ABCDEF12")],mocks({keyModels:["text","audio"]}));
@@ -146,4 +148,16 @@ test("planning instructions ban I2V and any artificial cost ceiling",async()=>{
   const r=await invoke([user("Une histoire de robot")]);
   assert.match(r.instructions,/AUCUN modèle T2V/);
   assert.match(r.instructions,/SANS plafond artificiel/);
+});
+test("render model is a quest-compatible lightweight tool caller",async()=>{
+ const x=await invoke([assistant(plan),assistant(preflight),user("CONFIRMER ABCDEF12")]);
+ assert.equal(x.model.model,"openai/gpt-5.4-nano");
+ assert.equal(x.maxOutputTokens,1800);
+});
+test("VERIFIER checks models and MCP but never generates paid media",async()=>{
+ const m=mocks({accountUsage:false});
+ const x=await invoke([user("VERIFIER")],m);
+ assert.equal(x.status,200);
+ assert.match((await x.json()).message,/Diagnostic sans génération de médias/);
+ assert.equal(m.getRuns(),0);
 });

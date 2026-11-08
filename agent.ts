@@ -6,9 +6,10 @@
  * Safety: planning costs a small text-model request; media production requires
  * a storyboard, preflight and an explicit second confirmation.
  */
-const VERSION = "0.1.1";
+const VERSION = "0.1.2";
 const MODEL_PREFERENCES = {
   script: ["deepseek/deepseek-v4.1-flash", "openai/gpt-6-luna", "minimax/minimax-m3.1-flash"],
+  production: ["openai/gpt-5.4-nano", "openai/gpt-6-luna", "deepseek/deepseek-v4.1-flash"],
   t2i: ["black-forest-labs/flux.1-schnell", "tongyi-mai/z-image-turbo"],
   i2i: ["black-forest-labs/flux.2-klein-4b", "microsoft/mai-image-2.6-flash"],
   tts: ["microsoft/mai-voice-2.1-flash", "openai/tts-1"],
@@ -95,6 +96,7 @@ function chooseModels(list,mode="quest") {
       if (mode==="quest" && m.paid_only!==false) return false;
       const input=m.input_modalities||[],output=m.output_modalities||[],eps=m.supported_endpoints||[];
       if (category==="script") return output.includes("text");
+      if (category==="production") return output.includes("text") && (m.capabilities||[]).includes("tool_calling");
       if (category==="t2i") return output.includes("image") && eps.includes("/v1/images/generations");
       if (category==="i2i") return input.includes("image") && eps.includes("/v1/images/edits");
       if (category==="tts") return output.includes("audio") && eps.includes("/v1/audio/speech");
@@ -111,14 +113,14 @@ function stringArray(x) {
   return null;
 }
 function keyAllowedModels(key) {
-  for (const v of [key?.allowedModels,key?.allowed_models,key?.models,key?.modelAccess,key?.model_access,key?.limits?.models]) {
+  for (const v of [key?.permissions?.models,key?.allowedModels,key?.allowed_models,key?.models,key?.modelAccess,key?.model_access,key?.limits?.models]) {
     const out=stringArray(v);
     if(out) return out;
   }
   return null;
 }
 function keyPermissions(key) {
-  return stringArray(key?.permissions) || stringArray(key?.scopes) || stringArray(key?.scope) || [];
+  return stringArray(key?.permissions?.account) || stringArray(key?.permissions) || stringArray(key?.scopes) || stringArray(key?.scope) || [];
 }
 function isAllowedByKey(allowed,id,category) {
   if (!allowed) return null;
@@ -157,7 +159,7 @@ async function runPreflight({pollinations,mcp},plan) {
     if(key.type==="publishable" || key.type==="app") problems.push("Cette clé de type App Key n'autorise pas les générations.");
     if(allowed) {
       for (const [category,id] of Object.entries(selected.picked)) {
-        const kind = category==="script"?"text":(category==="t2i"||category==="i2i"?"image":(category==="tts"?"audio":"audio"));
+        const kind = (category==="script" || category==="production")?"text":(category==="t2i"||category==="i2i"?"image":"audio");
         if (!isAllowedByKey(allowed,id,kind)) problems.push("Modèle refusé par la restriction de clé : "+id);
       }
     } else messages.push("Les restrictions fines de modèles ne sont pas exposées par la réponse de clé ; le serveur contrôlera les appels.");
@@ -170,8 +172,12 @@ async function runPreflight({pollinations,mcp},plan) {
     if(Number.isFinite(available) && available<plan.budget) problems.push("Budget de clé insuffisant : "+available+" Pollen visibles.");
     if (plan.mode==="quest") {
       const tier=Number(balance.accountBalance?.tier);
-      if (!balance.accountBalance || !Number.isFinite(tier)) problems.push("Mode Quest Strict : solde Quest non visible. Ajouter account:usage à la clé ou sélectionner le mode avec Paid autorisé.");
-      else if (tier < plan.budget) problems.push("Solde Quest insuffisant pour garantir l'absence de dépense Paid : "+tier+" Pollen.");
+      if (!balance.accountBalance || !Number.isFinite(tier)) {
+        messages.push("Mode Quest First : solde Quest masqué par le jeton délégué. Les modèles paid_only sont exclus, mais le repli vers Paid reste possible si la clé ne porte pas questPollenOnly.");
+      } else if (tier < plan.budget) {
+        messages.push("Solde Quest insuffisant pour couvrir l'estimation : un repli Paid pourrait intervenir, sauf si la clé l'interdit.");
+      }
+      if (key?.questPollenOnly === false) messages.push("La clé permet le repli sur Paid si le Quest disponible ne suffit pas.");
     }
   }
   const tools={};
@@ -216,7 +222,7 @@ function exposedTools(catalog,pick,plan) {
         if(typeof modelId!=="string") throw Error("Chaque génération exige un identifiant de modèle autorisé.");
         const authorized=Object.values(pick);
         if(!authorized.includes(modelId)) throw Error("Modèle absent de la whitelist vérifiée : "+modelId);
-        if(plan.mode==="quest" && !authorized.includes(modelId)) throw Error("Mode Quest Strict : modèle refusé.");
+        if(plan.mode==="quest" && !authorized.includes(modelId)) throw Error("Quest First : modèle refusé.");
       }
       return execute(args,...other);
     }};
@@ -227,8 +233,8 @@ function onboardingInstructions(id) {
   return [
     "Tu es Story Animator, un réalisateur français chaleureux, précis, créatif et économe. Version "+VERSION+".",
     "Tu réalises EXCLUSIVEMENT des films à partir d'images fixes animées par FFmpeg : T2I / I2I, zoompan, panoramiques, fondus. STRICTEMENT AUCUN modèle T2V, I2V, Kling, Veo, Runway, Sora, ni clips vidéo générés par IA.",
-    "Dialoguer naturellement. À partir d'une idée, demander seulement les paramètres manquants : durée 15 ou 30 s, format 16:9 ou 9:16, style, langue, ton et mode Quest Strict ou Qualité Plus.",
-    "Par défaut : Quest Strict, 15 secondes, 3 scènes, 16:9. Ne jamais réclamer de clé, de token, ni de secret.",
+    "Dialoguer naturellement. À partir d'une idée, demander seulement les paramètres manquants : durée 15 ou 30 s, format 16:9 ou 9:16, style, langue, ton et mode Quest First ou Qualité Plus.",
+    "Par défaut : Quest First, 15 secondes, 3 scènes, 16:9. Quest First sélectionne les modèles compatibles Quest mais ne garantit pas que Paid ne sera jamais utilisé. Ne jamais réclamer de clé, de token, ni de secret.",
     "Proposer un synopsis et trois scènes avec narration, prompts d'images et mouvements caméra zoompan/pan. Ne jamais promettre une qualité/une disponibilité non testée.",
     "Pour chaque scène préciser durée, personnage, cohérence visuelle, texte dit, image de référence, mouvement. Trois scènes de cinq secondes pour une demande de 15 s. Ecrire une narration PRONONÇABLE en 15 secondes maximum, idéalement 25 à 32 mots au total.",
     "Afficher UNIQUEMENT les modèles T2I, I2I, TTS et STT candidats présents dans nos préférences. Ne pas citer de modèle vidéo. Donner une estimation facultative des frais en Pollen, SANS plafond artificiel ni promesse de ne jamais le dépasser. Les limites imposées par la clé Pollinations demeurent applicables.",
@@ -243,10 +249,10 @@ function onboardingInstructions(id) {
 }
 function productionInstructions(plan,selected) {
   return [
-    "Tu es Story Animator. Une demande de production a passé le contrôle de droits, modèles, solde Quest, budget et MCP.",
+    "Tu es Story Animator. Une demande de production a passé le contrôle des droits, des modèles, du budget de clé et des MCP. L'estimation n'est pas un plafond.",
     "Créer un film narratif d'images fixes animées de "+plan.duration+" secondes et "+plan.scenes+" scènes max, via les outils MCP autorisés.",
     "MODE="+plan.mode+". Modèles obligatoires :"+JSON.stringify(selected)+". Ne jamais utiliser un autre modèle, même en fallback.",
-    "Utiliser les capacités réelles des outils : générer 3 images fixes T2I (et éventuellement une édition I2I), une narration vocale courte, essayer la transcription pour aligner les sous-titres. Jamais de génération vidéo IA.",
+    "Utiliser les outils réels : créer 3 images T2I fixes (et éventuellement une édition I2I), une voix française de 15 secondes, une transcription si possible et une composition FFmpeg. Aucun modèle I2V/T2V. Agir par appels outils rapidement plutôt que développer une analyse longue.",
     "Si aucune transcription à horodatage n'est obtenue, produire les sous-titres approximatifs découpés d'après la durée de la narration et le dire honnêtement.",
     "Concevoir avec le MCP FFmpeg 15 secondes de vidéo 16:9 animant les trois images fixes par zoompan, panoramiques, fondus. Mixer la voix si disponible, incruster des sous-titres seulement si le serveur fournit le filtre nécessaire. Ne pas appeler de modèle de génération vidéo.",
     "Les outils reçoivent des URLs médias HTTPS publiques si nécessaires. Respecter chaque schéma d'arguments renvoyé par MCP.",
@@ -263,7 +269,11 @@ export default async function agent({ model, respond, mcp, pollinations, request
   const say=(message,status)=>reply(message,status,Boolean(payload?.stream));
   const history=getMessages(payload);
   const message=lastUser(history).trim();
-  if(!message) return say("Bienvenue ! Donne-moi une idée d'histoire. Je proposerai 15 secondes, 3 scènes et le mode Quest Strict par défaut.");
+  if (/^(VERIFIER|VÉRIFIER|CHECK ACCESS|STATUS)$/i.test(message)) {
+    const check=await runPreflight({pollinations,mcp},{id:"CHECK",mode:"quest",duration:15,scenes:3,budget:0});
+    return say("Diagnostic sans génération de médias.\nModèles autorisés : "+JSON.stringify(check.selected)+"\nMCP : "+JSON.stringify(check.tools)+"\nObservations : "+check.messages.join(" | ")+"\nBlocages : "+(check.problems.join(" | ")||"aucun"));
+  }
+  if(!message) return say("Bienvenue ! Donne-moi une idée d'histoire. Je proposerai 15 secondes, 3 scènes et le mode Quest First par défaut.");
   const plan=lastPlan(history);
   const producing=idFromCommand(message,"PRODUIRE");
   const confirming=idFromCommand(message,"CONFIRMER");
@@ -273,15 +283,15 @@ export default async function agent({ model, respond, mcp, pollinations, request
     const check=await runPreflight({pollinations,mcp},plan);
     if(!check.ok) return say("Précontrôle bloquant, aucune génération lancée.\n"+check.problems.map(x=>"- "+x).join("\n")+"\n\n"+check.messages.join("\n"));
     if(producing) {
-      return say("Précontrôle réussi pour "+plan.id+".\nModèles vérifiés : "+JSON.stringify(check.selected)+"\nBudget de production : au plus "+plan.budget+" Pollen (estimation, pas limite transactionnelle API).\nClé, budget Quest et MCP accessibles.\nPour lancer les générations payantes, réponds exactement : CONFIRMER "+plan.id+"\n[[PREFLIGHT_OK:"+plan.id+"]]");
+      return say("Précontrôle réussi pour "+plan.id+".\nModèles vérifiés : "+JSON.stringify(check.selected)+"\nEstimation indicative : "+plan.budget+" Pollen (sans plafond artificiel, avec budget de clé applicable).\nClé et MCP accessibles. La possibilité de consommer Paid dépend des paramètres réels de la clé si le solde Quest est épuisé.\nPour lancer les générations payantes, réponds exactement : CONFIRMER "+plan.id+"\n[[PREFLIGHT_OK:"+plan.id+"]]");
     }
     if(!lastPreflight(history,plan.id)) return say("La confirmation préalable manque dans l'historique. Envoyer PRODUIRE "+plan.id+" d'abord ; aucun outil lancé.",400);
     try {
       const [imageTools,ffmpegTools]=await Promise.all([mcp.tools("pollinations"),mcp.tools("ffmpeg")]);
       const safe=exposedTools({...imageTools,...ffmpegTools},check.selected,plan);
       if(!Object.keys(safe).length) return say("Aucun outil média sûr détecté ; production arrêtée sans dépense.",503);
-      const pickedModel=chooseModels(await obtainCatalog(pollinations),plan.mode).picked.script;
-      return await respond({model:model(pickedModel),instructions:productionInstructions(plan,check.selected),tools:safe});
+      const pickedModel=check.selected.production;
+      return await respond({model:model(pickedModel),instructions:productionInstructions(plan,check.selected),tools:safe,maxOutputTokens:1800});
     }catch(e){return say("Erreur pendant l'initialisation du rendu : "+String(e.message||e).slice(0,350),503);}
   }
   // A regular conversational turn uses a low-cost, quest-compatible text model.

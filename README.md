@@ -1,8 +1,7 @@
 # Story Animator — Pollinations Code Agent (v0.1)
 
 > Public showcase agent, entirely separate from our private FreeVideoMaker and IACA.
-> **Status:** local code and mocked tests; no live Pollinations render or dashboard
-> registration claimed. FreeVideoMaker's private Python logic is NOT included.
+> **Status:** private Pollinations agent registered by its owner, code and tests published on GitHub. Real onboarding and permission preflight verified; complete MP4 rendering remains unverified. After each change, Pollinations Code Agent must be explicitly synced to the new Git commit. FreeVideoMaker's private Python logic is NOT included.
 
 A community **Code Agent** that proposes a narrated short story with animated
 still images, then (after approvals) attempts generation with Pollinations
@@ -44,13 +43,14 @@ NO external VPS. Animated-image effects are described for FFmpeg:
 
 ## V1 Quest compatibility — live registry
 
-Before production, `/v1/models` is read. For Quest Strict, an eligible model
+Before production, `/v1/models` is read. For Quest First, an eligible model
 MUST have `paid_only === false` and the relevant input/output/endpoints.
 Suggested preferences, with fallback in order:
 
 | Capability | Primary | Backup |
 | --- | --- | --- |
-| Scenario/chat | `minimax/minimax-m3.1-flash` | `openai/gpt-6-luna` |
+| Scenario/chat | `deepseek/deepseek-v4.1-flash` | `openai/gpt-6-luna` |
+| Production tool orchestrator | `openai/gpt-5.4-nano` | `openai/gpt-6-luna` |
 | Image T2I | `black-forest-labs/flux.1-schnell` | `tongyi-mai/z-image-turbo` |
 | Image edit I2I | `black-forest-labs/flux.2-klein-4b` | `microsoft/mai-image-2.6-flash` |
 | TTS voice | `microsoft/mai-voice-2.1-flash` | `openai/tts-1` |
@@ -59,9 +59,7 @@ Suggested preferences, with fallback in order:
 Quality Plus is reserved for later: the initial whitelist deliberately
 contains no Paid-only model. A mere label `Quest` is not sufficient:
 Pollinations spends Quest Pollen first on regular models when it covers
-the request; otherwise it could use Paid Pollen. **Quest Strict therefore
-requires readable Quest balance (normally `account:usage`) and blocks media
-generation if the indicated Quest balance cannot cover the pilot budget.**
+the request; otherwise it could use Paid Pollen. **Quest First is a model-selection preference, not a guarantee of Quest-only billing.** The agent runtime may hide wallet breakdown from its delegated token. To guarantee Quest-only, the user's own key should be configured `questPollenOnly` when that setting is available.
 
 ## Permission preflight (no secrets!)
 
@@ -77,8 +75,7 @@ The Code Agent does not receive the caller's API key. It uses
 A restricted key might allow only `text` but not `image`/`audio`; in that
 case preflight stops before media generation and recommends authorizing
 the missing categories or exact models in the caller's Pollinations
-dashboard. For Quest Strict, missing `account:usage` means it cannot prove
-the no-Paid constraint and must fail closed.
+dashboard. Missing `account:usage` or the absence of an account-level Quest balance does not automatically block Quest First; the agent explains the limitation and the key's actual budget remains enforced.
 
 **Never request `account:keys` (administrator permission) or have users
 paste keys into chat.** No credential is logged. Tools are not exposed during
