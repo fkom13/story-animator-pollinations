@@ -1,142 +1,73 @@
-# Story Animator — Pollinations Code Agent (v0.1.3)
+# Story Animator — Dynamic Director v0.2
 
-> Public showcase agent, entirely separate from our private FreeVideoMaker and IACA.
-> **Status:** private Pollinations agent registered by its owner, code and tests published on GitHub. Real onboarding and permission preflight verified; complete MP4 rendering remains unverified. After each change, Pollinations Code Agent must be explicitly synced to the new Git commit. FreeVideoMaker's private Python logic is NOT included.
+Pollinations Community Code Agent. Public source repository, PRIVATE agent during tests. No IACA or FreeVideoMaker private source, no creator API key supplied to runtime. The customer's own delegated key pays for Pollinations generations.
 
-A community **Code Agent** that proposes a narrated short story with animated
-still images, then (after approvals) attempts generation with Pollinations
-MCP image, speech, transcription and FFmpeg tools. Production uses only
-Pollinations services and the *caller's own Pollen*.
+## Architecture
 
-## Layout on PC2
+- agent.ts: the sole source executed by Pollinations. Built from the four independent source modules.
+- src/01-core.js: key, model registry, health and benchmark ranking.
+- src/02-story.js: decision classifier, writing, directorial revision, dynamic storyboard and price estimation.
+- src/03-media.js: image generation, first-image visual quality check, animated FFmpeg shots, TTS and captions.
+- src/04-agent.js: conversational onboarding, human approval, resumable media batches.
+- scripts/build.mjs: compile modules into one self-contained agent.ts; arbitrary npm packages are not installed by Pollinations.
+- tests/director-v02.test.mjs: mocked key/price/permission and workflow regression tests.
+- tests/media-v02-validate.mjs: actual local FFmpeg tests using previously generated media without new image costs.
 
-This project is an independent **sibling** of:
-- `/home/fkomp/Desktop/oracle/opencode-pollinations-plugin` — unchanged.
-- `/home/fkomp/Desktop/oracle/story-animator-pollinations` — this repo.
+The former v0.1.3 is protected in git branch safety/pre-dynamic-director.
 
-Pollinations needs an **independent public GitHub repository** with `agent.ts` at
-its root. The GitHub source is deployed and executed on Pollinations,
-not on GitHub Actions. No custom npm dependencies are installed in the agent.
+## Onboarding and caller-key preflight
 
-## V1 — on-boarding (French first)
+Before deciding on a model, the agent checks the *current caller's* delegated rights using /account/key and /account/balance; /v1/models lists current capabilities, paid_only and prices; /models/status?minutes=60 supplies operational reliability and latency; Pollinations and FFmpeg MCP discovery verifies accessible tools.
 
-1. User gives an idea; agent asks only for missing parameters: 15/30 sec,
-   story tone, 16:9, and Quest First or Plus. The validated V1 production preset is 15 seconds / 3 scenes.
-2. Agent builds synopsis, scene list, planned shots, voice-over and camera moves;
-   it emits a `[[STORY_PLAN:...]]` marker. Conversation history must be supplied
-   again on subsequent requests: Pollinations Responses are stateless.
-3. `PRODUIRE <id>`: fresh rights/balance/catalog/MCP checks (read-only);
-   no media generation. Shows a `PREFLIGHT_OK` marker only when passed.
-4. `CONFIRMER <id>`: rechecks rights and authorizes a limited
-   set of image/audio/FFmpeg MCP tools for the production turn.
-5. Agent attempts to generate images, speech, timed captions and MP4 via
-   Pollinations; errors and partial results must be reported, never faked.
+- Any missing text/image/audio/edit/vision category is disclosed before storyboard or spending.
+- Missing speech access triggers an immediate warning: no audio narration or dialogue with this key.
+- A key which does not prove questPollenOnly cannot guarantee zero Paid spend in Eco/Medium. Scenario planning can proceed; strict production stops until permissions are adjusted. Keys are never pasted into the agent.
+- Per-category roles are automatically ranked with primary and fallbacks: classifier, writer, director, orchestrator, vision, T2I, I2I, TTS and STT.
+- Scores use user entitlement, modality, live prices, health/latency and clearly labeled editorial creative priors; they are NOT arbitrary hardcoded model allowlists.
+- For known matching LLMs, an independent benchmark is fetched live from ArtificialWatch Bench Index, CC BY 4.0. Attribution: https://artificialwatch.com/benchmarks ; dataset https://artificialwatch.com/data/bench-index.json . This is a general LLM benchmark, not a creativity or TTS benchmark; unpaired models get no invented benchmark score.
+- Artificial Analysis offers separate media ranking endpoints but requires its own API key and redistribution license, so it is not silently accessed via customer credentials.
 
-**Real video output is not verified until we connect a Pollinations Code Agent
-and exercise the alpha MCP servers with a caller key.** The exact MCP tool
-schemas are discovered at runtime; authentication is required to list them
-outside an agent. Stage 5 is experimental.
+## User conversation
 
-V1 purposely has NO I2V, NO dependence on our private Python pipeline, and
-NO external VPS. Animated-image effects are described for FFmpeg:
-`zoompan`, pans, fades/`xfade`, optional burned-in captions and audio sync.
+1. User proposes an idea, tone and desired length. The agent recommends 15, 30, or 60 seconds, but custom lengths are supported subject to practical runtime/size constraints.
+2. The low-cost decision model classifies genre, visual style, complexity, character continuity and rhythm, after the caller-key check. JEV is Paid-only and therefore considered only when Paid is permitted.
+3. The user chooses Eco, Medium or Pro and optionally per-stage model/fallback:
+   - MODE ECO / MODE MEDIUM / MODE PRO
+   - MODELE writer provider/model-id
+   - FALLBACK t2i provider/model-id
+4. SCENARIO 60 MEDIUM writes a dramatic treatment and optionally has a separate director refine it; the agent presents the full synopsis, character bible, narration, intelligent shot breakdown, individual model rankings, and rough Quest/Paid Pollen cost ranges.
+5. VALIDER SCRIPT <project-id> validates the creative plan without buying images.
+6. VALIDER PRODUCTION <project-id> explicitly authorizes media generation.
+7. CONTINUER generates batches of up to four images, verifies the first actual image through a vision model if authorized, renders animated segments through Pollinations MCP FFmpeg, and finally combines the clips with voice and approximate burned-in subtitles.
 
-## V1 Quest compatibility — live registry
+All actions use the customer's delegated Pollinations permissions and money, not the publisher's. No fixed Pollen spending ceiling exists in the agent. Key-side budget limits still apply.
 
-Before production, `/v1/models` is read. For Quest First, an eligible model
-MUST have `paid_only === false` and the relevant input/output/endpoints.
-Suggested preferences, with fallback in order:
+## Quality tiers
 
-| Capability | Primary | Backup |
-| --- | --- | --- |
-| Scenario/chat | `deepseek/deepseek-v4.1-flash` | `openai/gpt-6-luna` |
-| Production tool orchestrator | `openai/gpt-5.4-nano` | `openai/gpt-6-luna` |
-| Image T2I | `black-forest-labs/flux.1-schnell` | `tongyi-mai/z-image-turbo` |
-| Image edit I2I | `black-forest-labs/flux.2-klein-4b` | `microsoft/mai-image-2.6-flash` |
-| TTS voice | `microsoft/mai-voice-2.1-flash` | `openai/tts-1` |
-| Speech-to-text/captions | `microsoft/mai-transcribe-2` | `openai/whisper-large-v3` |
+- Eco: Quest-only strict, up to one image per five seconds, simple but coherent animations.
+- Medium: Quest-only strict, up to three images per five seconds, more interesting shot changes and transitions.
+- Pro: Quest/Paid models permitted, up to five images per five seconds, ambitious sequences and faster montage.
+- In every tier the actual rhythm is decided from the screenplay's narrative intensity. Five seconds is a planning window, not a fixed scene length.
+- Voice, captions, photorealism, style, format and requested length are part of the budget estimate.
 
-Quality Plus is reserved for later: the initial whitelist deliberately
-contains no Paid-only model. A mere label `Quest` is not sufficient:
-Pollinations spends Quest Pollen first on regular models when it covers
-the request; otherwise it could use Paid Pollen. **Quest First is a model-selection preference, not a guarantee of Quest-only billing.** The agent runtime may hide wallet breakdown from its delegated token. To guarantee Quest-only, the user's own key should be configured `questPollenOnly` when that setting is available.
+## Verified and experimental
 
-## Permission preflight (no secrets!)
+- Automated tests cover permissions, unavailable audio, user restrictions, class/category selection, dynamic 60/85-second screenplay planning, approvals and replay-safe resumed batches.
+- Real local FFmpeg tests cover mixed shot durations, H.264/AAC audio and burned subtitles.
+- Pollinations Code Agent runtime and full MP4 still require live smoke testing after syncing this v0.2 revision.
+- Subtitles are approximated from script beats; accurate word-alignment and downloadable SRT are not yet guaranteed.
+- State is retained by the chat's replayed history marker. Cross-session storage and invisible persistence via Pollinations Computer are not yet implemented.
+- Long videos need several CONTINUER interactions because of MCP request call limits. Final media URLs should be checked with a real probe before claiming a valid film.
+- A first-image vision QC runs when the caller can access an appropriate vision model. Multi-image I2I continuity remains a future extension.
 
-The Code Agent does not receive the caller's API key. It uses
-`pollinations(path,init)` and MCP helpers provided by the platform.
+## PC2 development
 
-- `GET /account/key`: validity/type, visible scopes and model restrictions.
-- `GET /account/balance`: remaining key budget and, if `account:usage`
-  is granted, Quest/Paid balance.
-- `GET /v1/models`: current capabilities, availability and `paid_only`.
-- MCP discovery: `pollinations` and `ffmpeg` tool catalogs.
+Project: /home/fkomp/Desktop/oracle/story-animator-pollinations
 
-A restricted key might allow only `text` but not `image`/`audio`; in that
-case preflight stops before media generation and recommends authorizing
-the missing categories or exact models in the caller's Pollinations
-dashboard. Missing `account:usage` or the absence of an account-level Quest balance does not automatically block Quest First; the agent explains the limitation and the key's actual budget remains enforced.
+Build: npm run build
+Unit tests: npm run check
+Real local FFmpeg test: node tests/media-v02-validate.mjs
 
-**Never request `account:keys` (administrator permission) or have users
-paste keys into chat.** No credential is logged. Tools are not exposed during
-planning. During production each media model ID must be in the verified
-whitelist, and tool calls are capped at 13.
-
-**Important limitation:** the Pollen estimate is advisory, NOT a transactional spending limit. There is no artificial spending cap enforced by the agent. The existing user's key budget and Pollinations billing rules remain authoritative.
-
-## Verified FFmpeg rendering (15 seconds, 3 scenes)
-
-A real first test exposed that a single JPEG source lasts only 0.04 seconds to FFmpeg; the originally generated `-shortest` command produced an invalid 0.02-second output. A second test rendered valid 15-second H.264/AAC, but did not actually pan or zoom. The fixed preset now forces `-loop 1 -framerate 25 -t 5` on EACH image, uses `zoompan` driven by the output frame index `on`, pads audio to 15 seconds, and never uses `-shortest`. An optional fifth source can supply an already-hosted SRT. The server-hosted MCP FFmpeg output was verified as 15.000 seconds, 375 video frames, 370 distinct frames, and an AAC audio track.
-
-Demo: [BEEP-7 animated 15s MP4](demos/beep7_15s.mp4). If Pollinations media URLs fail to play inline, download this `.mp4` from GitHub.
-
-The agent pins these arguments in `verifiedFfmpegPreset()` and rejects unsupported formats rather than reporting success for an untested montage. Other durations will require their own tested presets. No new model generation was needed to fix the original output.
-
-## Testing on PC2
-
-```bash
-cd /home/fkomp/Desktop/oracle/story-animator-pollinations
-node --test tests/agent.test.mjs
-```
-
-Tests use in-memory mocked `pollinations()` and MCP methods. They do not
-call paid APIs, nor prove end-to-end video production.
-
-## Publishing to GitHub + Pollinations
-
-1. Push **this repository only** to a public GitHub repository named
-   `story-animator-pollinations` on the intended GitHub account.
-2. Dashboard <https://enter.pollinations.ai/> → My Models → Agents →
-   Create → **Code Agent**, enter the GitHub repository URL.
-3. Start agent visibility **private**; a public repository is still needed
-   for Code Agent's source.
-4. In Pollinations, call the registered agent model ID
-   (normally `<github-user>/story-animator-pollinations`) via chat
-   with the user's key and the conversation history maintained.
-5. Run a 15-second pilot and inspect the output media and actual Pollen costs.
-6. Community visibility requires publisher access; only enable after
-   successful real tests of the MCP alpha services and key permissions.
-
-Official reference:
-<https://github.com/pollinations/pollinations/blob/main/BUILD_YOUR_OWN_AGENT.md>
-
-## Known experimental boundaries
-
-- MCP server names and tool argument schemas are dynamic and were not
-  readable anonymously; the agent will discover them when deployed.
-- Narrative/scene state currently depends on replaying the conversation;
-  restart persistence and cross-session resumability are NOT implemented.
-- First MVP's FFmpeg montage, speech timing and captions are **not verified**.
-- The SDK's default tool-loop limit and Pollinations MCP's 16-calls/request
-  limit may require the future design to break long films into several turns.
-- No further media charges should occur without explicit confirmation;
-  however planning itself uses a small paid text model call.
-- Some user's key restrictions may not be exposed by `GET /account/key`;
-  any denied model call must fail rather than silently use Paid.
-- Media URLs may be unlisted but accessible to anyone with the link;
-  do not submit personal or confidential media in public tests.
-
-## Development rules
-
-No personal credentials, `.env`, logs with tokens, exported MCP secrets,
-FreeVideoMaker source, or IACA configuration may be committed here.
+GitHub: https://github.com/fkom13/story-animator-pollinations
+Pollinations: https://enter.pollinations.ai
+Official guide: https://github.com/pollinations/pollinations/blob/main/BUILD_YOUR_OWN_AGENT.md

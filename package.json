@@ -1,11 +1,12 @@
 {
   "name": "story-animator-pollinations",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Pollinations Code Agent for narrated animated-image stories (Quest-first)",
+  "description": "Quest-aware Pollinations Community Code Agent with user-key preflight, dynamic model scoring, storyboarding and animated-still FFmpeg studio",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/*.test.mjs",
-    "check": "node --check agent.ts && npm test"
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/director-v02.test.mjs",
+    "check": "node scripts/build.mjs --check && node --check agent.ts && npm test"
   }
 }

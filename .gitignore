@@ -14,3 +14,4 @@ tmp/
 .DS_Store
 tests/manual-*.mjs
 pilots/
+agent.v02.ts
