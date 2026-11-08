@@ -15,3 +15,5 @@ tmp/
 tests/manual-*.mjs
 pilots/
 agent.v02.ts
+
+__pycache__/

@@ -1,0 +1,1941 @@
+[
+  {
+    "scenario": "scenario_writer_quest",
+    "model": "typesafe/jev-1.14",
+    "runtime_s": 6.883,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "confidence": 0.55,
+        "probabilities": {
+          "A": 0.3,
+          "B": 0.7,
+          "C": 0
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 1.77,
+        "confidence": 0,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.21,
+          "1": 0.14,
+          "2": 0.32,
+          "3": 0.33
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.55,
+    "probabilities": {
+      "A": 0.3,
+      "B": 0.7,
+      "C": 0
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 1.77,
+      "confidence": 0,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.21,
+        "1": 0.14,
+        "2": 0.32,
+        "3": 0.33
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "t2i_pro_street",
+    "model": "typesafe/jev-1.14",
+    "runtime_s": 4.188,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "confidence": 1,
+        "probabilities": {
+          "A": 0,
+          "B": 1,
+          "C": 0
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 1.93,
+        "confidence": 0,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.25,
+          "1": 0.07,
+          "2": 0.17,
+          "3": 0.51
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 1,
+    "probabilities": {
+      "A": 0,
+      "B": 1,
+      "C": 0
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 1.93,
+      "confidence": 0,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.25,
+        "1": 0.07,
+        "2": 0.17,
+        "3": 0.51
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "scenario_writer_quest",
+    "model": "vllm-sr/d3",
+    "runtime_s": 5.291,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "probabilities": {
+          "A": 0.004829723167974829,
+          "B": 0.9948982143246189,
+          "C": 0.00027206250740628967
+        },
+        "confidence": 0.9923473214869282
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.9660578240238316,
+        "probabilities": {
+          "0": 7.960905224388458e-05,
+          "1": 0.0028039938562077014,
+          "2": 0.028095361107021693,
+          "3": 0.9690210359845267
+        },
+        "confidence": 0.9660578240238312,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.9923473214869282,
+    "probabilities": {
+      "A": 0.004829723167974829,
+      "B": 0.9948982143246189,
+      "C": 0.00027206250740628967
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.9660578240238316,
+      "probabilities": {
+        "0": 7.960905224388458e-05,
+        "1": 0.0028039938562077014,
+        "2": 0.028095361107021693,
+        "3": 0.9690210359845267
+      },
+      "confidence": 0.9660578240238312,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "t2i_pro_street",
+    "model": "vllm-sr/d3",
+    "runtime_s": 5.879,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "probabilities": {
+          "A": 0.0001676121564883485,
+          "B": 0.9998153773735706,
+          "C": 1.7010469941071864e-05
+        },
+        "confidence": 0.9997230660603558
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.9628063153455138,
+        "probabilities": {
+          "0": 4.757998154023859e-05,
+          "1": 0.001066186327566694,
+          "2": 0.03491857205473213,
+          "3": 0.963967661636161
+        },
+        "confidence": 0.9628063153455138,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.9997230660603558,
+    "probabilities": {
+      "A": 0.0001676121564883485,
+      "B": 0.9998153773735706,
+      "C": 1.7010469941071864e-05
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.9628063153455138,
+      "probabilities": {
+        "0": 4.757998154023859e-05,
+        "1": 0.001066186327566694,
+        "2": 0.03491857205473213,
+        "3": 0.963967661636161
+      },
+      "confidence": 0.9628063153455138,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "scenario_writer_quest",
+    "model": "microsoft/microsoft-decision-1",
+    "runtime_s": 6.244,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "choice": "A",
+        "confidence": 0.7744733709762366,
+        "probabilities": {
+          "A": 0.8496489139841578,
+          "B": 0.1476468401313058,
+          "C": 0.002704245884536413
+        },
+        "type": "choice"
+      },
+      "selection_quality": {
+        "confidence": 0.27789439055817927,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.07966158894515102,
+          "1": 0.21654264965577796,
+          "2": 0.45842079291863447,
+          "3": 0.24537496848043652
+        },
+        "score": 1.8695091409343565,
+        "type": "score"
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "confidence": 0.7744733709762366,
+    "probabilities": {
+      "A": 0.8496489139841578,
+      "B": 0.1476468401313058,
+      "C": 0.002704245884536413
+    },
+    "quality_score": {
+      "confidence": 0.27789439055817927,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.07966158894515102,
+        "1": 0.21654264965577796,
+        "2": 0.45842079291863447,
+        "3": 0.24537496848043652
+      },
+      "score": 1.8695091409343565,
+      "type": "score"
+    },
+    "eligible_pick": true,
+    "matches_reference": false
+  },
+  {
+    "scenario": "t2i_pro_street",
+    "model": "microsoft/microsoft-decision-1",
+    "runtime_s": 5.728,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "choice": "B",
+        "confidence": 0.9864989627099745,
+        "probabilities": {
+          "A": 0.008573825871828667,
+          "B": 0.9909993084733164,
+          "C": 0.00042686565485489455
+        },
+        "type": "choice"
+      },
+      "selection_quality": {
+        "confidence": 0.5116345407504115,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.014903803901059401,
+          "1": 0.052019386985454996,
+          "2": 0.299350903550677,
+          "3": 0.6337259055628086
+        },
+        "score": 2.551898910775235,
+        "type": "score"
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.9864989627099745,
+    "probabilities": {
+      "A": 0.008573825871828667,
+      "B": 0.9909993084733164,
+      "C": 0.00042686565485489455
+    },
+    "quality_score": {
+      "confidence": 0.5116345407504115,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.014903803901059401,
+        "1": 0.052019386985454996,
+        "2": 0.299350903550677,
+        "3": 0.6337259055628086
+      },
+      "score": 2.551898910775235,
+      "type": "score"
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "scenario_writer_quest",
+    "model": "openai/gpt-6-luna-decisions",
+    "runtime_s": 5.222,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "choice": "B",
+        "probabilities": {
+          "A": 0.07,
+          "B": 0.93,
+          "C": 0
+        },
+        "confidence": 0.89,
+        "type": "choice"
+      },
+      "selection_quality": {
+        "score": 2.56,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.06,
+          "2": 0.29,
+          "3": 0.64
+        },
+        "confidence": 0.56,
+        "type": "score",
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.89,
+    "probabilities": {
+      "A": 0.07,
+      "B": 0.93,
+      "C": 0
+    },
+    "quality_score": {
+      "score": 2.56,
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.06,
+        "2": 0.29,
+        "3": 0.64
+      },
+      "confidence": 0.56,
+      "type": "score",
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "t2i_pro_street",
+    "model": "openai/gpt-6-luna-decisions",
+    "runtime_s": 5.439,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "choice": "B",
+        "probabilities": {
+          "A": 0.01,
+          "B": 0.99,
+          "C": 0
+        },
+        "confidence": 0.99,
+        "type": "choice"
+      },
+      "selection_quality": {
+        "score": 2.08,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.13,
+          "2": 0.63,
+          "3": 0.23
+        },
+        "confidence": 0.62,
+        "type": "score",
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.99,
+    "probabilities": {
+      "A": 0.01,
+      "B": 0.99,
+      "C": 0
+    },
+    "quality_score": {
+      "score": 2.08,
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.13,
+        "2": 0.63,
+        "3": 0.23
+      },
+      "confidence": 0.62,
+      "type": "score",
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "scenario_writer_quest",
+    "model": "jaredpalmer/kev-4b",
+    "runtime_s": 6.234,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "probabilities": {
+          "A": 0.2842,
+          "B": 0.6292,
+          "C": 0.0866
+        },
+        "confidence": 0.4438
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 1.7534,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.0855,
+          "1": 0.2948,
+          "2": 0.4007,
+          "3": 0.2191
+        },
+        "confidence": 0.3152
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.4438,
+    "probabilities": {
+      "A": 0.2842,
+      "B": 0.6292,
+      "C": 0.0866
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 1.7534,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.0855,
+        "1": 0.2948,
+        "2": 0.4007,
+        "3": 0.2191
+      },
+      "confidence": 0.3152
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "t2i_pro_street",
+    "model": "jaredpalmer/kev-4b",
+    "runtime_s": 6.57,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "probabilities": {
+          "A": 0.076,
+          "B": 0.9119,
+          "C": 0.0121
+        },
+        "confidence": 0.8679
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 1.978,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.0496,
+          "1": 0.2285,
+          "2": 0.4164,
+          "3": 0.3056
+        },
+        "confidence": 0.3668
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.8679,
+    "probabilities": {
+      "A": 0.076,
+      "B": 0.9119,
+      "C": 0.0121
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 1.978,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.0496,
+        "1": 0.2285,
+        "2": 0.4164,
+        "3": 0.3056
+      },
+      "confidence": 0.3668
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "scenario_writer_quest",
+    "model": "perplexity/pplx-decider-v1.2",
+    "runtime_s": 5.603,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "confidence": 0.759004154797385,
+        "probabilities": {
+          "A": 0.11219016576375569,
+          "B": 0.8393361031982568,
+          "C": 0.04847373103798748
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.2323108205967737,
+        "confidence": 0.5167900048784031,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.008977427434795305,
+          "1": 0.10749473239282108,
+          "2": 0.5257674323131984,
+          "3": 0.3577604078591852
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.759004154797385,
+    "probabilities": {
+      "A": 0.11219016576375569,
+      "B": 0.8393361031982568,
+      "C": 0.04847373103798748
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.2323108205967737,
+      "confidence": 0.5167900048784031,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.008977427434795305,
+        "1": 0.10749473239282108,
+        "2": 0.5257674323131984,
+        "3": 0.3577604078591852
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "t2i_pro_street",
+    "model": "perplexity/pplx-decider-v1.2",
+    "runtime_s": 5.428,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "confidence": 0.9953571625488722,
+        "probabilities": {
+          "A": 0.0011078387746536178,
+          "B": 0.9969047750325815,
+          "C": 0.0019873861927650616
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.59452577002103,
+        "confidence": 0.7296838466806868,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.003054849615173021,
+          "1": 0.03623087345835038,
+          "2": 0.32384793421675007,
+          "3": 0.6368663427097265
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.9953571625488722,
+    "probabilities": {
+      "A": 0.0011078387746536178,
+      "B": 0.9969047750325815,
+      "C": 0.0019873861927650616
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.59452577002103,
+      "confidence": 0.7296838466806868,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.003054849615173021,
+        "1": 0.03623087345835038,
+        "2": 0.32384793421675007,
+        "3": 0.6368663427097265
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "scenario_writer_quest",
+    "model": "liquid/d1",
+    "runtime_s": 4.078,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "A",
+        "confidence": 0.5963190122646749,
+        "probabilities": {
+          "A": 0.7308793415097832,
+          "B": 0.2688754757052571,
+          "C": 0.0002451827849596965
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 1.857001217601559,
+        "confidence": 0.4815291701486317,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.028790251694170533,
+          "1": 0.27315430273656355,
+          "2": 0.5103194218428022,
+          "3": 0.18773602372646364
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "confidence": 0.5963190122646749,
+    "probabilities": {
+      "A": 0.7308793415097832,
+      "B": 0.2688754757052571,
+      "C": 0.0002451827849596965
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 1.857001217601559,
+      "confidence": 0.4815291701486317,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.028790251694170533,
+        "1": 0.27315430273656355,
+        "2": 0.5103194218428022,
+        "3": 0.18773602372646364
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": false
+  },
+  {
+    "scenario": "t2i_pro_street",
+    "model": "liquid/d1",
+    "runtime_s": 4.754,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "confidence": 0.9812772653783965,
+        "probabilities": {
+          "A": 0.012431020366309808,
+          "B": 0.987518176918931,
+          "C": 5.080271475937214e-05
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.3536589761739632,
+        "confidence": 0.5283040280604114,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.0015843375229845752,
+          "1": 0.05584982283684363,
+          "2": 0.5298883655833961,
+          "3": 0.41267747405677574
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.9812772653783965,
+    "probabilities": {
+      "A": 0.012431020366309808,
+      "B": 0.987518176918931,
+      "C": 5.080271475937214e-05
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.3536589761739632,
+      "confidence": 0.5283040280604114,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.0015843375229845752,
+        "1": 0.05584982283684363,
+        "2": 0.5298883655833961,
+        "3": 0.41267747405677574
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "scenario_writer_quest",
+    "model": "respan/span-01-lite",
+    "runtime_s": 4.831,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "suitability_A": {
+        "type": "noul",
+        "noul": 0.0622849
+      },
+      "suitability_B": {
+        "type": "noul",
+        "noul": 0.9676335
+      },
+      "suitability_C": {
+        "type": "noul",
+        "noul": 0.007870851
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "scores": {
+      "A": 0.0622849,
+      "B": 0.9676335,
+      "C": 0.007870851
+    },
+    "confidence": 0.9676335,
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "t2i_pro_street",
+    "model": "respan/span-01-lite",
+    "runtime_s": 5.626,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "suitability_A": {
+        "type": "noul",
+        "noul": 0.013893433
+      },
+      "suitability_B": {
+        "type": "noul",
+        "noul": 0.98828614
+      },
+      "suitability_C": {
+        "type": "noul",
+        "noul": 0.0007262397
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "scores": {
+      "A": 0.013893433,
+      "B": 0.98828614,
+      "C": 0.0007262397
+    },
+    "confidence": 0.98828614,
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "eco_cost_priority",
+    "model": "typesafe/jev-1.14",
+    "runtime_s": 4.373,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "C",
+        "confidence": 0.66,
+        "probabilities": {
+          "A": 0,
+          "B": 0.23,
+          "C": 0.77
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.22,
+        "confidence": 0.2,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.17,
+          "1": 0.07,
+          "2": 0.15,
+          "3": 0.61
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "C",
+    "confidence": 0.66,
+    "probabilities": {
+      "A": 0,
+      "B": 0.23,
+      "C": 0.77
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.22,
+      "confidence": 0.2,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.17,
+        "1": 0.07,
+        "2": 0.15,
+        "3": 0.61
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "eco_cost_priority",
+    "model": "vllm-sr/d3",
+    "runtime_s": 6.05,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "C",
+        "probabilities": {
+          "A": 2.2336160342736045e-05,
+          "B": 0.0040546208647655076,
+          "C": 0.9959230429748918
+        },
+        "confidence": 0.9938845644623376
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.971677679970277,
+        "probabilities": {
+          "0": 9.14239799869431e-05,
+          "1": 0.0029822690724865784,
+          "2": 0.022083509944788634,
+          "3": 0.9748427970027378
+        },
+        "confidence": 0.9716776799702774,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "C",
+    "confidence": 0.9938845644623376,
+    "probabilities": {
+      "A": 2.2336160342736045e-05,
+      "B": 0.0040546208647655076,
+      "C": 0.9959230429748918
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.971677679970277,
+      "probabilities": {
+        "0": 9.14239799869431e-05,
+        "1": 0.0029822690724865784,
+        "2": 0.022083509944788634,
+        "3": 0.9748427970027378
+      },
+      "confidence": 0.9716776799702774,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "eco_cost_priority",
+    "model": "microsoft/microsoft-decision-1",
+    "runtime_s": 5.593,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "choice": "C",
+        "confidence": 0.9636415223672987,
+        "probabilities": {
+          "A": 0.0039877128852888,
+          "B": 0.02025127220317883,
+          "C": 0.9757610149115324
+        },
+        "type": "choice"
+      },
+      "selection_quality": {
+        "confidence": 0.79147841652819,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.013635667083255896,
+          "1": 0.04200081149608179,
+          "2": 0.10075470902451988,
+          "3": 0.8436088123961425
+        },
+        "score": 2.774336666733549,
+        "type": "score"
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "C",
+    "confidence": 0.9636415223672987,
+    "probabilities": {
+      "A": 0.0039877128852888,
+      "B": 0.02025127220317883,
+      "C": 0.9757610149115324
+    },
+    "quality_score": {
+      "confidence": 0.79147841652819,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.013635667083255896,
+        "1": 0.04200081149608179,
+        "2": 0.10075470902451988,
+        "3": 0.8436088123961425
+      },
+      "score": 2.774336666733549,
+      "type": "score"
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "eco_cost_priority",
+    "model": "respan/span-01-lite",
+    "runtime_s": 5.907,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "suitability_A": {
+        "type": "noul",
+        "noul": 0.0008567754
+      },
+      "suitability_B": {
+        "type": "noul",
+        "noul": 0.037550688
+      },
+      "suitability_C": {
+        "type": "noul",
+        "noul": 0.9663247
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "C",
+    "scores": {
+      "A": 0.0008567754,
+      "B": 0.037550688,
+      "C": 0.9663247
+    },
+    "confidence": 0.9663247,
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "eco_cost_priority",
+    "model": "openai/gpt-6-luna-decisions",
+    "runtime_s": 5.584,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "choice": "C",
+        "probabilities": {
+          "A": 0.01,
+          "B": 0.07,
+          "C": 0.92
+        },
+        "confidence": 0.88,
+        "type": "choice"
+      },
+      "selection_quality": {
+        "score": 2.47,
+        "probabilities": {
+          "0": 0.02,
+          "1": 0.08,
+          "2": 0.31,
+          "3": 0.59
+        },
+        "confidence": 0.47,
+        "type": "score",
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "C",
+    "confidence": 0.88,
+    "probabilities": {
+      "A": 0.01,
+      "B": 0.07,
+      "C": 0.92
+    },
+    "quality_score": {
+      "score": 2.47,
+      "probabilities": {
+        "0": 0.02,
+        "1": 0.08,
+        "2": 0.31,
+        "3": 0.59
+      },
+      "confidence": 0.47,
+      "type": "score",
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "eco_cost_priority",
+    "model": "jaredpalmer/kev-4b",
+    "runtime_s": 6.255,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "C",
+        "probabilities": {
+          "A": 0.0123,
+          "B": 0.158,
+          "C": 0.8297
+        },
+        "confidence": 0.7446
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 1.9866,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.0518,
+          "1": 0.2346,
+          "2": 0.3888,
+          "3": 0.3248
+        },
+        "confidence": 0.3371
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "C",
+    "confidence": 0.7446,
+    "probabilities": {
+      "A": 0.0123,
+      "B": 0.158,
+      "C": 0.8297
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 1.9866,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.0518,
+        "1": 0.2346,
+        "2": 0.3888,
+        "3": 0.3248
+      },
+      "confidence": 0.3371
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "eco_cost_priority",
+    "model": "perplexity/pplx-decider-v1.2",
+    "runtime_s": 5.248,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "C",
+        "confidence": 0.9656643997052213,
+        "probabilities": {
+          "A": 0.00140160427461596,
+          "B": 0.021488795921903173,
+          "C": 0.9771095998034809
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.7413588412846392,
+        "confidence": 0.8275725608564262,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.004948684307449528,
+          "1": 0.04050839242676679,
+          "2": 0.1627783209394786,
+          "3": 0.7917646023263051
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "C",
+    "confidence": 0.9656643997052213,
+    "probabilities": {
+      "A": 0.00140160427461596,
+      "B": 0.021488795921903173,
+      "C": 0.9771095998034809
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.7413588412846392,
+      "confidence": 0.8275725608564262,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.004948684307449528,
+        "1": 0.04050839242676679,
+        "2": 0.1627783209394786,
+        "3": 0.7917646023263051
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "eco_cost_priority",
+    "model": "liquid/d1",
+    "runtime_s": 5.061,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "C",
+        "confidence": 0.6958451254973759,
+        "probabilities": {
+          "A": 0.0011985872215077166,
+          "B": 0.20157132911357503,
+          "C": 0.7972300836649172
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.237352325020704,
+        "confidence": 0.4431449068979606,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.006832546732031671,
+          "1": 0.1460862905766044,
+          "2": 0.4499774536299923,
+          "3": 0.39710370906137166
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "C",
+    "confidence": 0.6958451254973759,
+    "probabilities": {
+      "A": 0.0011985872215077166,
+      "B": 0.20157132911357503,
+      "C": 0.7972300836649172
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.237352325020704,
+      "confidence": 0.4431449068979606,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.006832546732031671,
+        "1": 0.1460862905766044,
+        "2": 0.4499774536299923,
+        "3": 0.39710370906137166
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "live_writer_medium_20261108",
+    "model": "typesafe/jev-1.14",
+    "runtime_s": 4.142,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "A",
+        "confidence": 0.77,
+        "probabilities": {
+          "A": 0.83,
+          "B": 0.17,
+          "C": 0,
+          "D": 0
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 1.99,
+        "confidence": 0,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.16,
+          "1": 0.12,
+          "2": 0.28,
+          "3": 0.44
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "confidence": 0.77,
+    "probabilities": {
+      "A": 0.83,
+      "B": 0.17,
+      "C": 0,
+      "D": 0
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 1.99,
+      "confidence": 0,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.16,
+        "1": 0.12,
+        "2": 0.28,
+        "3": 0.44
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": false
+  },
+  {
+    "scenario": "live_writer_medium_20261108",
+    "model": "vllm-sr/d3",
+    "runtime_s": 6.168,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "B",
+        "probabilities": {
+          "A": 0.14485766535974015,
+          "B": 0.8540203012573289,
+          "C": 0.0004070201273139902,
+          "D": 0.0007150132556169469
+        },
+        "confidence": 0.8053604016764385
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.688824882161345,
+        "probabilities": {
+          "0": 0.0016367206366787097,
+          "1": 0.05901211637386474,
+          "2": 0.18824072318088922,
+          "3": 0.7511104398085673
+        },
+        "confidence": 0.6888248821613452,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "B",
+    "confidence": 0.8053604016764385,
+    "probabilities": {
+      "A": 0.14485766535974015,
+      "B": 0.8540203012573289,
+      "C": 0.0004070201273139902,
+      "D": 0.0007150132556169469
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.688824882161345,
+      "probabilities": {
+        "0": 0.0016367206366787097,
+        "1": 0.05901211637386474,
+        "2": 0.18824072318088922,
+        "3": 0.7511104398085673
+      },
+      "confidence": 0.6888248821613452,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": true
+  },
+  {
+    "scenario": "live_writer_medium_20261108",
+    "model": "microsoft/microsoft-decision-1",
+    "runtime_s": 7.006,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "choice": "A",
+        "confidence": 0.599234127506084,
+        "probabilities": {
+          "A": 0.699425595629563,
+          "B": 0.2915639750982668,
+          "C": 0.003670248791306467,
+          "D": 0.00534018048086374
+        },
+        "type": "choice"
+      },
+      "selection_quality": {
+        "confidence": 0.3651705846789068,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.055216335066235314,
+          "1": 0.10315769477171718,
+          "2": 0.31774803165286747,
+          "3": 0.5238779385091801
+        },
+        "score": 2.310287573604992,
+        "type": "score"
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "confidence": 0.599234127506084,
+    "probabilities": {
+      "A": 0.699425595629563,
+      "B": 0.2915639750982668,
+      "C": 0.003670248791306467,
+      "D": 0.00534018048086374
+    },
+    "quality_score": {
+      "confidence": 0.3651705846789068,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.055216335066235314,
+        "1": 0.10315769477171718,
+        "2": 0.31774803165286747,
+        "3": 0.5238779385091801
+      },
+      "score": 2.310287573604992,
+      "type": "score"
+    },
+    "eligible_pick": true,
+    "matches_reference": false
+  },
+  {
+    "scenario": "live_writer_medium_20261108",
+    "model": "respan/span-01-lite",
+    "runtime_s": 5.277,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "suitability_A": {
+        "type": "noul",
+        "noul": 0.8917814
+      },
+      "suitability_B": {
+        "type": "noul",
+        "noul": 0.59193194
+      },
+      "suitability_C": {
+        "type": "noul",
+        "noul": 0.03634123
+      },
+      "suitability_D": {
+        "type": "noul",
+        "noul": 0.000110167384
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "scores": {
+      "A": 0.8917814,
+      "B": 0.59193194,
+      "C": 0.03634123,
+      "D": 0.000110167384
+    },
+    "confidence": 0.8917814,
+    "eligible_pick": true,
+    "matches_reference": false
+  },
+  {
+    "scenario": "live_writer_medium_20261108",
+    "model": "openai/gpt-6-luna-decisions",
+    "runtime_s": 4.814,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "choice": "A",
+        "probabilities": {
+          "A": 0.67,
+          "B": 0.25,
+          "C": 0.07,
+          "D": 0.01
+        },
+        "confidence": 0.56,
+        "type": "choice"
+      },
+      "selection_quality": {
+        "score": 2.59,
+        "probabilities": {
+          "0": 0.01,
+          "1": 0.08,
+          "2": 0.22,
+          "3": 0.69
+        },
+        "confidence": 0.59,
+        "type": "score",
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "confidence": 0.56,
+    "probabilities": {
+      "A": 0.67,
+      "B": 0.25,
+      "C": 0.07,
+      "D": 0.01
+    },
+    "quality_score": {
+      "score": 2.59,
+      "probabilities": {
+        "0": 0.01,
+        "1": 0.08,
+        "2": 0.22,
+        "3": 0.69
+      },
+      "confidence": 0.59,
+      "type": "score",
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": false
+  },
+  {
+    "scenario": "live_writer_medium_20261108",
+    "model": "jaredpalmer/kev-4b",
+    "runtime_s": 4.983,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "A",
+        "probabilities": {
+          "A": 0.4325,
+          "B": 0.3647,
+          "C": 0.1561,
+          "D": 0.0468
+        },
+        "confidence": 0.2433
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.0188,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.0381,
+          "1": 0.225,
+          "2": 0.4167,
+          "3": 0.3201
+        },
+        "confidence": 0.3786
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "confidence": 0.2433,
+    "probabilities": {
+      "A": 0.4325,
+      "B": 0.3647,
+      "C": 0.1561,
+      "D": 0.0468
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.0188,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.0381,
+        "1": 0.225,
+        "2": 0.4167,
+        "3": 0.3201
+      },
+      "confidence": 0.3786
+    },
+    "eligible_pick": true,
+    "matches_reference": false
+  },
+  {
+    "scenario": "live_writer_medium_20261108",
+    "model": "perplexity/pplx-decider-v1.2",
+    "runtime_s": 4.498,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "A",
+        "confidence": 0.3321538247949505,
+        "probabilities": {
+          "A": 0.49911536859621286,
+          "B": 0.47159264905855575,
+          "C": 0.017323925115707232,
+          "D": 0.011968057229524189
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.08374130490467,
+        "confidence": 0.4935578153953265,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.03151770756201987,
+          "1": 0.14831502472596206,
+          "2": 0.5250755229573463,
+          "3": 0.2950917447546717
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "confidence": 0.3321538247949505,
+    "probabilities": {
+      "A": 0.49911536859621286,
+      "B": 0.47159264905855575,
+      "C": 0.017323925115707232,
+      "D": 0.011968057229524189
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.08374130490467,
+      "confidence": 0.4935578153953265,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.03151770756201987,
+        "1": 0.14831502472596206,
+        "2": 0.5250755229573463,
+        "3": 0.2950917447546717
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": false
+  },
+  {
+    "scenario": "live_writer_medium_20261108",
+    "model": "liquid/d1",
+    "runtime_s": 4.807,
+    "exit": 0,
+    "ok": true,
+    "response": {
+      "best": {
+        "type": "choice",
+        "choice": "A",
+        "confidence": 0.8567914853673219,
+        "probabilities": {
+          "A": 0.8925936140254914,
+          "B": 0.10660509842482388,
+          "C": 0.0005954913455532401,
+          "D": 0.0002057962041315189
+        }
+      },
+      "selection_quality": {
+        "type": "score",
+        "score": 2.322131958943672,
+        "confidence": 0.3221319589436722,
+        "legend": {
+          "0": "Poor match",
+          "1": "Acceptable match",
+          "2": "Good match",
+          "3": "Excellent match"
+        },
+        "probabilities": {
+          "0": 0.00994906095627624,
+          "1": 0.137342550052619,
+          "2": 0.3733357580822611,
+          "3": 0.4793726309088437
+        }
+      }
+    },
+    "raw_output_excerpt": null,
+    "error": null,
+    "pick": "A",
+    "confidence": 0.8567914853673219,
+    "probabilities": {
+      "A": 0.8925936140254914,
+      "B": 0.10660509842482388,
+      "C": 0.0005954913455532401,
+      "D": 0.0002057962041315189
+    },
+    "quality_score": {
+      "type": "score",
+      "score": 2.322131958943672,
+      "confidence": 0.3221319589436722,
+      "legend": {
+        "0": "Poor match",
+        "1": "Acceptable match",
+        "2": "Good match",
+        "3": "Excellent match"
+      },
+      "probabilities": {
+        "0": 0.00994906095627624,
+        "1": 0.137342550052619,
+        "2": 0.3733357580822611,
+        "3": 0.4793726309088437
+      }
+    },
+    "eligible_pick": true,
+    "matches_reference": false
+  }
+]
