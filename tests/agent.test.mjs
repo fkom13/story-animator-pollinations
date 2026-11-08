@@ -98,3 +98,35 @@ test("max call limit guards repeat billable tool calls",async()=>{
   for(let i=0;i<13;i++) await r.tools.runFfmpeg.execute({});
   await assert.rejects(()=>r.tools.runFfmpeg.execute({}),/Plafond/);
 });
+
+test("read-only preflight returns a valid Responses API-shaped message",async()=>{
+  const r=await invoke([assistant(plan),user("PRODUIRE ABCDEF12")]);
+  const p=await r.json();
+  assert.equal(p.object,"response");
+  assert.equal(p.status,"completed");
+  assert.equal(p.output[0].type,"message");
+  assert.equal(p.output[0].content[0].type,"output_text");
+  assert.match(p.output[0].content[0].text,/PREFLIGHT_OK/);
+});
+test("streamed preflight emits a completion event without generating media",async()=>{
+  const msg=[assistant(plan),user("PRODUIRE ABCDEF12")];
+  const req=new Request("https://example.com/v1/responses",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"tester/story-animator",messages:msg,stream:true})});
+  const r=await agent({...mocks(),request:req});
+  assert.equal(r.headers.get("content-type"),"text/event-stream");
+  const stream=await r.text();
+  assert.match(stream,/event: response\.completed/);
+  assert.match(stream,/PREFLIGHT_OK:ABCDEF12/);
+  assert.match(stream,/data: \[DONE\]/);
+});
+test("quest strict blocks live model that switched to paidOnly",async()=>{
+  const m=mocks();
+  const old=m.pollinations;
+  m.pollinations=async path=>{
+    if(path!=="/v1/models") return old(path);
+    const changed=models.map(x=>({...x,paid_only:x.id==="black-forest-labs/flux.2-klein-4b"?true:false}));
+    return Response.json({data:changed});
+  };
+  const r=await invoke([assistant(plan),user("PRODUIRE ABCDEF12")],m);
+  assert.match((await r.json()).message,/Aucun modèle adapté disponible : i2i/);
+});
+

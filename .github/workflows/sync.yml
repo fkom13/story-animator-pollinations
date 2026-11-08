@@ -1,18 +1,24 @@
-name: Pollinations Code Agent Sync
+name: Test and Pollinations Agent Sync
 on:
   push:
     branches: [main]
-    paths:
-      - "agent.ts"
-      - "README.md"
-      - ".github/workflows/sync.yml"
+  pull_request:
   workflow_dispatch:
 jobs:
-  sync:
-    if: vars.POLLINATIONS_SYNC_URL != ''
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Sync deployed agent from default branch
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm run check
+  sync:
+    needs: test
+    if: github.event_name != 'pull_request' && vars.POLLINATIONS_SYNC_URL != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Redeploy current public repository revision
         env:
           SYNC_URL: ${{ vars.POLLINATIONS_SYNC_URL }}
         run: curl --fail --retry 2 --retry-delay 30 -X POST "$SYNC_URL"
