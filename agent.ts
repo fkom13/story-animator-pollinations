@@ -67,9 +67,12 @@ function statusMap(data){const map=new Map();for(let x of data?.data||[])if(x.is
 function health(m,stat){
  const h=m.health||{},s=stat.get(m.id);
  const total=Number(s?.total_requests||h.requests||0);
- const reliability=s?Number(s.status_2xx||0)/Math.max(1,total):Number(h.success_rate??70)/100;
+ // 402 and user 4xx errors are not model outages. Separate infra reliability from caller entitlement.
+ const prior=Math.max(0,Math.min(1,Number(h.success_rate??70)/100));
+ const usable=Number(s?.status_2xx||0),failures=Number(s?.errors_5xx||0);
+ const reliability=s?(30*prior+usable)/(30+usable+failures):prior;
  return {up:h.status!=="down",status:h.status||"unknown",success:rnd(reliability,3),
-  p50:s?.latency_p50_ms||null,requests:total};
+  p50:s?.latency_p50_ms||null,p95:s?.latency_p95_ms||null,requests:total};
 }
 const BENCHMAP={
  "openai/gpt-6.1-terra":"gpt-terra-next","openai/gpt-6-sol":"gpt-6-sol",
@@ -97,6 +100,8 @@ function scoreModel(m,role,tier,stat,bench){
  if(role==="classifier"&&m.id.includes("jev"))score+=0.2;
  if(role==="director"&&(m.context_length||0)>100000)score+=0.025;
  if(role==="vision"&&m.input_modalities?.includes("image"))score+=0.03;
+ if(["writer","director"].includes(role)&&h.p95&&h.p95>16000)score-=0.09;
+ if(["writer","director"].includes(role)&&h.p50&&h.p50>8000)score-=0.09;
  if(["t2i","i2i"].includes(role)&&!Object.prototype.hasOwnProperty.call(EDITORIAL_PRIOR,m.id))score-=0.19;
  if(["t2i","i2i","tts","stt"].includes(role)&&p===null)score-=0.08;
  return rnd(score,5);
@@ -208,16 +213,30 @@ async function classify(polli,x,brief){
  }catch(e){return {genre:"fiction",energy:brief.pace,imageStyle:brief.style,
   detail:"Classificateur non disponible; heuristique utilisée : "+e.message.slice(0,90),model:chosen.id}}
 }
+function cleanedDialogue(text){
+ return String(text||"").replace(/^[^:]{1,35}:\s*/,"").replace(/[«»]/g,"")
+  .replace(/\s*[—–]\s*puis\s*:\s*/gi," ").replace(/\s+/g," ").trim();
+}
+function beatTiming(visual,duration){
+ const m=String(visual).match(/^(\d{1,2}):(\d{2})\s*[-–]\s*(\d{1,2}):(\d{2})/);
+ if(!m)return null;
+ const start=60*Number(m[1])+Number(m[2]),end=60*Number(m[3])+Number(m[4]);
+ return start>=0&&end>start&&end<=duration+1?{start,end}:null;
+}
 function normalizeScript(a,brief){
  const beats=(Array.isArray(a.beats)?a.beats:[]).slice(0,Math.min(24,Math.ceil(brief.duration/2))).map((b,i)=>({
   title:String(b.title||"Moment "+(i+1)).slice(0,120),
   visual:String(b.visual||brief.idea).slice(0,550),
   spoken:String(b.spoken||b.speech||"").slice(0,500),
   intensity:Math.max(0,Math.min(1,Number(b.intensity)||0.5)),
-  camera:String(b.camera||"cinematic").slice(0,45)
+  camera:String(b.camera||"cinematic").slice(0,45),
+  timing:beatTiming(b.visual,brief.duration)
  }));
  if(!beats.length)beats.push({title:"Plan d'introduction",visual:brief.idea,spoken:"",intensity:0.5,camera:"dolly"});
- const voiceover=String(a.voiceover||beats.map(b=>b.spoken).join(" ")).slice(0,12000);
+ const rawVoice=String(a.voiceover||"");
+ const dialogueText=beats.map(b=>cleanedDialogue(b.spoken)).filter(Boolean).join(" ");
+ const isDirection=/\b(?:diction|mixage|sound design|dialogues joués|sous-titres incrustés|voix off f[ée]minine|voix off masculine)\b/i.test(rawVoice);
+ const voiceover=(isDirection||rawVoice.length<18?dialogueText:cleanedDialogue(rawVoice)).slice(0,12000);
  return {title:String(a.title||"Story Animator").slice(0,110),
   synopsis:String(a.synopsis||brief.idea).slice(0,1000),
   visualBible:String(a.visualBible||a.world||"").slice(0,1200),
@@ -244,21 +263,29 @@ function shotPlan(script,brief,classification){
  let index=0;
  for(let slot=0;slot<blocks;slot++){
   const st=slot*5,total=Math.min(5,seconds-st);
-  const beat=script.beats[Math.min(script.beats.length-1,Math.floor(st/seconds*script.beats.length))];
+  const timed=script.beats.find(b=>b.timing&&st>=b.timing.start&&st<b.timing.end);
+  const beat=timed||script.beats[Math.min(script.beats.length-1,Math.floor(st/seconds*script.beats.length))];
+  const beatIndex=script.beats.indexOf(beat);
   const intensity=.65*beat.intensity+.35*classification.energy;
   const n=brief.tier==="eco"?1:brief.tier==="medium"?(intensity<.3?1:intensity<.7?2:3):(intensity<.3?2:intensity<.7?3:5);
   for(let j=0;j<n;j++){
    const dt=total/n,phase=j/n;
-   const prompt=[beat.visual,script.visualBible,script.characters.join("; "),
-    "photographic composition for beat "+beat.title,"frame "+(j+1)+"/"+n,
-    "visual storytelling; camera angle "+motions[(index+slot*3+j)%motions.length],
-    "subshot progression "+phase.toFixed(2),"aspect "+brief.aspect].join("; ").slice(0,1500);
    shots.push({n:index++,start:rnd(st+j*dt,3),duration:rnd(dt,3),
     intensity:rnd(intensity,2),motion:motions[(index+slot*3+j)%motions.length],
-    prompt,spoken:beat.spoken.slice(0,160)});
+    beat:beatIndex,subshot:j,within:n});
   }
  }
  return shots;
+}
+function shotPrompt(shot,script,brief){
+ const beat=script.beats[shot.beat]||script.beats[0];
+ const view=shot.subshot===0?"wide atmospheric composition":shot.subshot===1?
+   "medium expressive shot with changed perspective":"tight narrative insert or action closeup";
+ return [beat.visual,script.visualBible,script.characters.join("; "),
+  "photographic composition for beat "+beat.title,
+  "image "+(shot.subshot+1)+"/"+shot.within,
+  view,"camera direction "+shot.motion,"aspect "+brief.aspect,
+  "Strict character continuity across shots, same costume and facial identity"].join("; ").slice(0,1500);
 }
 function billEstimate(brief,x,shots){
  const counts={classifier:1,writer:1,director:1,vision:shots.length?1:0,
@@ -326,10 +353,11 @@ async function generateImages(st,x,mcp,polli){
  const messages=[],take=Math.min(4,st.shots.length-st.images.length);
  for(let i=0;i<take;i++){
   const shot=st.shots[st.images.length];
+  const prompt=shotPrompt(shot,st.script,st.brief);
   let u=null,modelName=null;
   for(const cand of (x.ranks.t2i||[]).slice(0,2)){
    try{
-    u=await toolCall(mcp,"pollinations","generateImage",{model:cand.id,prompt:shot.prompt,
+    u=await toolCall(mcp,"pollinations","generateImage",{model:cand.id,prompt,
       size:st.brief.aspect==="9:16"?"720x1280":"1280x720"});
     modelName=cand.id;break;
    }catch(e){messages.push("Image "+shot.n+", "+cand.id+" : "+String(e.message||e).slice(0,100))}
@@ -337,7 +365,7 @@ async function generateImages(st,x,mcp,polli){
   if(!u){messages.push("Lot interrompu : modèle image principal et fallback indisponibles.");break}
   st.images.push({n:shot.n,url:u,model:modelName});
   if(st.images.length===1){
-   st.review=await reviewFirstImage(polli,x.ranks.vision?.[0]?.id,u,shot.prompt);
+   st.review=await reviewFirstImage(polli,x.ranks.vision?.[0]?.id,u,prompt);
    messages.push("Contrôle de la 1ère image : "+(st.review.score===null?st.review.note:
      "score "+st.review.score+" ; "+(st.review.issues||[]).join("; ")));
    if(st.review.score!==null&&st.review.score<0.5){

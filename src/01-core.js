@@ -67,9 +67,12 @@ function statusMap(data){const map=new Map();for(let x of data?.data||[])if(x.is
 function health(m,stat){
  const h=m.health||{},s=stat.get(m.id);
  const total=Number(s?.total_requests||h.requests||0);
- const reliability=s?Number(s.status_2xx||0)/Math.max(1,total):Number(h.success_rate??70)/100;
+ // 402 and user 4xx errors are not model outages. Separate infra reliability from caller entitlement.
+ const prior=Math.max(0,Math.min(1,Number(h.success_rate??70)/100));
+ const usable=Number(s?.status_2xx||0),failures=Number(s?.errors_5xx||0);
+ const reliability=s?(30*prior+usable)/(30+usable+failures):prior;
  return {up:h.status!=="down",status:h.status||"unknown",success:rnd(reliability,3),
-  p50:s?.latency_p50_ms||null,requests:total};
+  p50:s?.latency_p50_ms||null,p95:s?.latency_p95_ms||null,requests:total};
 }
 const BENCHMAP={
  "openai/gpt-6.1-terra":"gpt-terra-next","openai/gpt-6-sol":"gpt-6-sol",
@@ -97,6 +100,8 @@ function scoreModel(m,role,tier,stat,bench){
  if(role==="classifier"&&m.id.includes("jev"))score+=0.2;
  if(role==="director"&&(m.context_length||0)>100000)score+=0.025;
  if(role==="vision"&&m.input_modalities?.includes("image"))score+=0.03;
+ if(["writer","director"].includes(role)&&h.p95&&h.p95>16000)score-=0.09;
+ if(["writer","director"].includes(role)&&h.p50&&h.p50>8000)score-=0.09;
  if(["t2i","i2i"].includes(role)&&!Object.prototype.hasOwnProperty.call(EDITORIAL_PRIOR,m.id))score-=0.19;
  if(["t2i","i2i","tts","stt"].includes(role)&&p===null)score-=0.08;
  return rnd(score,5);

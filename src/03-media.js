@@ -34,10 +34,11 @@ async function generateImages(st,x,mcp,polli){
  const messages=[],take=Math.min(4,st.shots.length-st.images.length);
  for(let i=0;i<take;i++){
   const shot=st.shots[st.images.length];
+  const prompt=shotPrompt(shot,st.script,st.brief);
   let u=null,modelName=null;
   for(const cand of (x.ranks.t2i||[]).slice(0,2)){
    try{
-    u=await toolCall(mcp,"pollinations","generateImage",{model:cand.id,prompt:shot.prompt,
+    u=await toolCall(mcp,"pollinations","generateImage",{model:cand.id,prompt,
       size:st.brief.aspect==="9:16"?"720x1280":"1280x720"});
     modelName=cand.id;break;
    }catch(e){messages.push("Image "+shot.n+", "+cand.id+" : "+String(e.message||e).slice(0,100))}
@@ -45,7 +46,7 @@ async function generateImages(st,x,mcp,polli){
   if(!u){messages.push("Lot interrompu : modèle image principal et fallback indisponibles.");break}
   st.images.push({n:shot.n,url:u,model:modelName});
   if(st.images.length===1){
-   st.review=await reviewFirstImage(polli,x.ranks.vision?.[0]?.id,u,shot.prompt);
+   st.review=await reviewFirstImage(polli,x.ranks.vision?.[0]?.id,u,prompt);
    messages.push("Contrôle de la 1ère image : "+(st.review.score===null?st.review.note:
      "score "+st.review.score+" ; "+(st.review.issues||[]).join("; ")));
    if(st.review.score!==null&&st.review.score<0.5){

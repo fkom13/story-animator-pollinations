@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
-const source=await fs.readFile(new URL("../agent.v02.ts",import.meta.url),"utf8");
+const source=await fs.readFile(new URL("../agent.ts",import.meta.url),"utf8");
 const {default:agent}=await import("data:text/javascript;base64,"+Buffer.from(source).toString("base64"));
 const mods=[
  {id:"openai/gpt-5.4-nano",input_modalities:["text","image"],output_modalities:["text"],supported_endpoints:["/v1/chat/completions"],capabilities:["tool_calling"],paid_only:false,pricing:{promptTextTokens:"0.00000015",completionTextTokens:"0.0000009"}},
@@ -137,4 +137,35 @@ test("FFmpeg segments use loops and varied camera motion, no -shortest",async()=
  assert.ok(args.includes("-loop"));
  assert.ok(!args.includes("-shortest"));
  assert.match(args[args.indexOf("-filter_complex")+1],/zoompan/);
+});
+test("scenario state stays compact for a one-minute Medium project",async()=>{
+ const m=mock(),h=[user("Une fable street 60 secondes medium")];
+ let x=await run(h,m);h.push(assistant(x),user("SCENARIO 60 MEDIUM"));x=await run(h,m);
+ const encoded=x.match(/\[\[SA2:([A-Za-z0-9_-]+)\]\]/)?.[1];
+ assert.ok(encoded);
+ assert.ok(encoded.length<15000,"state too large: "+encoded.length);
+});
+test("spoken dialog overrides stage-direction prose in voiceover and beat timing is parsed",async()=>{
+ const art=await import("data:text/javascript;base64,"+Buffer.from(source+"\nexport {normalizeScript,shotPlan,health};").toString("base64"));
+ const brief={idea:"street fable",duration:60,tier:"medium",aspect:"16:9"};
+ const scene={title:"PLUME-1",voiceover:"Voix off féminine, diction grave, mixage et sound design urbain.",
+  beats:[{title:"Intro",visual:"0:00-0:06 — Le personnage marche.",spoken:"Voix off : « Une nuit dans Paris. »",intensity:.2},
+  {title:"Twist",visual:"0:06-0:60 — Le renard surprend le corbeau.",spoken:"Renard : « Chante pour moi. »",intensity:.9}]};
+ const s=art.normalizeScript(scene,brief);
+ assert.match(s.voiceover,/Une nuit dans Paris/);
+ assert.match(s.voiceover,/Chante pour moi/);
+ assert.doesNotMatch(s.voiceover,/mixage|sound design/i);
+ assert.deepEqual(s.beats[0].timing,{start:0,end:6});
+ const cuts=art.shotPlan(s,brief,{energy:.7});
+ assert.equal(cuts[0].beat,0);
+ assert.equal(cuts.find(x=>x.start>=10).beat,1);
+ assert.ok(cuts.every(x=>!("prompt" in x)), "prompts are regenerated at time of render, not stored in history");
+});
+test("5xx health is distinct from payment denials, so paid 402 does not rank model as broken",async()=>{
+ const art=await import("data:text/javascript;base64,"+Buffer.from(source+"\nexport {normalizeScript,shotPlan,health};").toString("base64"));
+ const model={id:"openai/gpt-6.1-terra",health:{status:"healthy",success_rate:98.2,requests:323}};
+ const map=new Map([[model.id,{total_requests:323,status_2xx:7,errors_402:315,errors_5xx:1,latency_p95_ms:4301}]]);
+ const h=art.health(model,map);
+ assert.ok(h.success>.93,"unexpected reliability "+h.success);
+ assert.equal(h.p95,4301);
 });
