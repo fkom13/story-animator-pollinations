@@ -6,9 +6,9 @@
  * Safety: planning costs a small text-model request; media production requires
  * a storyboard, preflight and an explicit second confirmation.
  */
-const VERSION = "0.1.0";
+const VERSION = "0.1.1";
 const MODEL_PREFERENCES = {
-  script: ["minimax/minimax-m3.1-flash", "openai/gpt-6-luna", "deepseek/deepseek-v4.1-flash"],
+  script: ["deepseek/deepseek-v4.1-flash", "openai/gpt-6-luna", "minimax/minimax-m3.1-flash"],
   t2i: ["black-forest-labs/flux.1-schnell", "tongyi-mai/z-image-turbo"],
   i2i: ["black-forest-labs/flux.2-klein-4b", "microsoft/mai-image-2.6-flash"],
   tts: ["microsoft/mai-voice-2.1-flash", "openai/tts-1"],
@@ -17,7 +17,7 @@ const MODEL_PREFERENCES = {
 const REQUIRED_CATEGORIES = ["text", "image", "audio"];
 const MAX_SECONDS = 30;
 const MAX_SCENES = 5;
-const BUDGET_CAP = 0.25; // Pollen, provisional cap for the 15s pilot.
+// No artificial Pollen spending ceiling. Account/key limits remain authoritative.
 function reply(message, status=200, stream=false) {
   const id="resp_"+crypto.randomUUID(), mid="msg_"+crypto.randomUUID();
   const part={type:"output_text",text:message,annotations:[]};
@@ -140,8 +140,8 @@ function mcpList(value) {
 async function runPreflight({pollinations,mcp},plan) {
   const messages=[], problems=[];
   if (!plan) return {ok:false,problems:["Storyboard introuvable. Recommencer la proposition."],messages};
-  if(plan.duration>MAX_SECONDS || plan.scenes>MAX_SCENES || plan.budget>BUDGET_CAP || plan.budget<=0) {
-    problems.push("Le film dépasse la limite v1 : 30 s, 5 scènes, ou 0,25 Pollen de budget pilote.");
+  if(plan.duration>MAX_SECONDS || plan.scenes>MAX_SCENES || plan.duration<=0 || plan.scenes<=0) {
+    problems.push("Pour ce prototype, le format est limité à 30 secondes et 5 scènes (limite technique, pas limite de Pollen).");
   }
   let registry=new Map(),key=null,balance=null;
   try {registry=await obtainCatalog(pollinations);} catch(e){problems.push("Catalogue modèles inaccessible : "+e.message);}
@@ -226,13 +226,13 @@ function exposedTools(catalog,pick,plan) {
 function onboardingInstructions(id) {
   return [
     "Tu es Story Animator, un réalisateur français chaleureux, précis, créatif et économe. Version "+VERSION+".",
-    "Ta spécialité est le film narré créé à partir d'images fixes animées, PAS le text-to-video ni l'I2V en V1.",
+    "Tu réalises EXCLUSIVEMENT des films à partir d'images fixes animées par FFmpeg : T2I / I2I, zoompan, panoramiques, fondus. STRICTEMENT AUCUN modèle T2V, I2V, Kling, Veo, Runway, Sora, ni clips vidéo générés par IA.",
     "Dialoguer naturellement. À partir d'une idée, demander seulement les paramètres manquants : durée 15 ou 30 s, format 16:9 ou 9:16, style, langue, ton et mode Quest Strict ou Qualité Plus.",
     "Par défaut : Quest Strict, 15 secondes, 3 scènes, 16:9. Ne jamais réclamer de clé, de token, ni de secret.",
     "Proposer un synopsis et trois scènes avec narration, prompts d'images et mouvements caméra zoompan/pan. Ne jamais promettre une qualité/une disponibilité non testée.",
-    "Pour chaque scène préciser durée, personnage, cohérence visuelle, texte dit, image de référence, mouvement.",
-    "Afficher les modèles candidats et un plafond indicatif de budget strictement <= 0.25 Pollen pour le pilote. Expliquer que le montant n'est pas un devis garanti.",
-    "Quand le storyboard est complet, écrire EXACTEMENT le marqueur [[STORY_PLAN:"+id+"|MODE:quest|DURATION:15|SCENES:3|BUDGET:0.25]].",
+    "Pour chaque scène préciser durée, personnage, cohérence visuelle, texte dit, image de référence, mouvement. Trois scènes de cinq secondes pour une demande de 15 s. Ecrire une narration PRONONÇABLE en 15 secondes maximum, idéalement 25 à 32 mots au total.",
+    "Afficher UNIQUEMENT les modèles T2I, I2I, TTS et STT candidats présents dans nos préférences. Ne pas citer de modèle vidéo. Donner une estimation facultative des frais en Pollen, SANS plafond artificiel ni promesse de ne jamais le dépasser. Les limites imposées par la clé Pollinations demeurent applicables.",
+    "Quand le storyboard est complet, écrire EXACTEMENT le marqueur [[STORY_PLAN:"+id+"|MODE:quest|DURATION:15|SCENES:3|BUDGET:0.5]]. Le champ BUDGET est une estimation indicative, pas un plafond.",
     "Si l'utilisateur a choisi 'Qualité Plus', remplacer MODE:quest par MODE:plus; si durée 30 s, remplacer DURATION:15 par 30; ne jamais dépasser 5 scènes.",
     "Ne jamais écrire un marqueur d'approbation de sécurité.",
     "Demander à l'utilisateur de répondre exactement PRODUIRE "+id+" pour déclencher les contrôles des autorisations avant montage.",
@@ -246,11 +246,11 @@ function productionInstructions(plan,selected) {
     "Tu es Story Animator. Une demande de production a passé le contrôle de droits, modèles, solde Quest, budget et MCP.",
     "Créer un film narratif d'images fixes animées de "+plan.duration+" secondes et "+plan.scenes+" scènes max, via les outils MCP autorisés.",
     "MODE="+plan.mode+". Modèles obligatoires :"+JSON.stringify(selected)+". Ne jamais utiliser un autre modèle, même en fallback.",
-    "Utiliser les capacités réelles des outils : générer les images, une narration vocale, essayer la transcription pour aligner les sous-titres.",
+    "Utiliser les capacités réelles des outils : générer 3 images fixes T2I (et éventuellement une édition I2I), une narration vocale courte, essayer la transcription pour aligner les sous-titres. Jamais de génération vidéo IA.",
     "Si aucune transcription à horodatage n'est obtenue, produire les sous-titres approximatifs découpés d'après la durée de la narration et le dire honnêtement.",
-    "Concevoir des effets FFmpeg zoompan, fondu xfade, panoramique, sous-titres. Utiliser le MCP FFmpeg, pas un runtime Python externe.",
+    "Concevoir avec le MCP FFmpeg 15 secondes de vidéo 16:9 animant les trois images fixes par zoompan, panoramiques, fondus. Mixer la voix si disponible, incruster des sous-titres seulement si le serveur fournit le filtre nécessaire. Ne pas appeler de modèle de génération vidéo.",
     "Les outils reçoivent des URLs médias HTTPS publiques si nécessaires. Respecter chaque schéma d'arguments renvoyé par MCP.",
-    "Maximum 13 appels outils par film, pas de nouveaux essais payants non autorisés. Si une étape échoue, rendre compte et proposer la reprise, sans inventer d'URL.",
+    "Limiter les appels à 13 pour un film pilote afin d'éviter les boucles inutiles ; il ne s'agit PAS d'un plafond de Pollen. Si une étape échoue, rendre compte sans inventer d'URL.",
     "Ne pas utiliser de services, clés ni dépôts privés IACA/FreeVideoMaker.",
     "Toujours publier les liens réellement renvoyés par les outils pour les images, pistes audio, MP4 et SRT/VTT si disponibles.",
     "Si le nombre ou les limites des outils empêchent le rendu, l'expliquer clairement; ne jamais déclarer le film terminé sans MP4 vérifiable.",

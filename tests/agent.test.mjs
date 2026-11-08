@@ -137,3 +137,13 @@ test("invalid JSON returns controlled 400 Responses error",async()=>{
   assert.equal(data.object,"response");
   assert.match(data.output[0].content[0].text,/Requête JSON attendue/);
 });
+test("v0.1.1 accepts a film estimate above the removed 0.25 Pollen cap", async()=>{
+  const newPlan=plan.replace('BUDGET:0.25','BUDGET:2.5');
+  const r=await invoke([assistant(newPlan),user("PRODUIRE ABCDEF12")],mocks({limit:4,quest:20}));
+  assert.match((await r.json()).message,/PREFLIGHT_OK/);
+});
+test("planning instructions ban I2V and any artificial cost ceiling",async()=>{
+  const r=await invoke([user("Une histoire de robot")]);
+  assert.match(r.instructions,/AUCUN modèle T2V/);
+  assert.match(r.instructions,/SANS plafond artificiel/);
+});

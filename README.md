@@ -85,11 +85,7 @@ paste keys into chat.** No credential is logged. Tools are not exposed during
 planning. During production each media model ID must be in the verified
 whitelist, and tool calls are capped at 13.
 
-**Important limitation:** the pilot's 0.25-Pollen figure is a
-*pre-production estimate/check*, NOT a transactional budget cap enforced
-by Pollinations across nested tool calls. The caller should separately
-configure a strict key budget in the dashboard. This is also a reason to
-test a 15-second pilot and avoid publishing broadly before real validation.
+**Important limitation:** the Pollen estimate is advisory, NOT a transactional spending limit. There is no artificial spending cap enforced by the agent. The existing user's key budget and Pollinations billing rules remain authoritative.
 
 ## Testing on PC2
 
