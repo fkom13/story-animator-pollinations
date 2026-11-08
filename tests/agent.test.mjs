@@ -31,7 +31,7 @@ function mocks({limit=2,quest=1,toolAccess=true,keyModels=["text","image","audio
       },
       tools:async server=>{
         const names=server==="ffmpeg"?["runFfmpeg"]:["generateImage","generateSpeech","transcribeAudio"];
-        return Object.fromEntries(names.map(name=>[name,{description:name,inputSchema:{},execute:async()=>{runs++;return {ok:true};}}]));
+        return Object.fromEntries(names.map(name=>[name,{description:name,inputSchema:{},execute:async(arg)=>{runs++;return name==="runFfmpeg"?{ok:true,received:arg}:{ok:true};}}]));
       }
     }
   };
@@ -97,8 +97,9 @@ test("model ID required for billable image calls",async()=>{
 });
 test("max call limit guards repeat billable tool calls",async()=>{
   const r=await invoke([assistant(plan),assistant(preflight),user("CONFIRMER ABCDEF12")]);
-  for(let i=0;i<13;i++) await r.tools.runFfmpeg.execute({});
-  await assert.rejects(()=>r.tools.runFfmpeg.execute({}),/Plafond/);
+  const sources=["a","b","c","d"].map(id=>"https://media.pollinations.ai/"+id);
+  for(let i=0;i<13;i++) await r.tools.runFfmpeg.execute({sources});
+  await assert.rejects(()=>r.tools.runFfmpeg.execute({sources}),/Plafond/);
 });
 
 test("read-only preflight returns a valid Responses API-shaped message",async()=>{
@@ -160,4 +161,23 @@ test("VERIFIER checks models and MCP but never generates paid media",async()=>{
  assert.equal(x.status,200);
  assert.match((await x.json()).message,/Diagnostic sans génération de médias/);
  assert.equal(m.getRuns(),0);
+});
+test("verified FFmpeg composition loops each still, animates and burns captions",async()=>{
+  const r=await invoke([assistant(plan),assistant(preflight),user("CONFIRMER ABCDEF12")]);
+  const sources=["a","b","c","d","e"].map(x=>"https://media.pollinations.ai/"+x);
+  const done=await r.tools.runFfmpeg.execute({sources,args:["-shortest"],outputExtension:"mp4"});
+  const args=done.received.args;
+  assert.equal(done.received.outputExtension,"mp4");
+  assert.deepEqual(done.received.sources,sources);
+  assert.equal(args.filter(x=>x==="-loop").length,3);
+  assert.ok(!args.includes("-shortest"));
+  assert.ok(args.includes("-movflags") && args.includes("+faststart"));
+  const filter=args[args.indexOf("-filter_complex")+1];
+  assert.match(filter,/on\/124/);
+  assert.match(filter,/subtitles=input4/);
+  assert.match(filter,/apad,atrim=duration=15/);
+});
+test("verified FFmpeg composition rejects missing media inputs",async()=>{
+  const r=await invoke([assistant(plan),assistant(preflight),user("CONFIRMER ABCDEF12")]);
+  await assert.rejects(()=>r.tools.runFfmpeg.execute({sources:[]}),/3 URLs d'images/);
 });

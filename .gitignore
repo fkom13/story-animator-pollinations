@@ -13,3 +13,4 @@ tmp/
 *.key
 .DS_Store
 tests/manual-*.mjs
+pilots/

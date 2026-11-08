@@ -1,4 +1,4 @@
-# Story Animator — Pollinations Code Agent (v0.1)
+# Story Animator — Pollinations Code Agent (v0.1.3)
 
 > Public showcase agent, entirely separate from our private FreeVideoMaker and IACA.
 > **Status:** private Pollinations agent registered by its owner, code and tests published on GitHub. Real onboarding and permission preflight verified; complete MP4 rendering remains unverified. After each change, Pollinations Code Agent must be explicitly synced to the new Git commit. FreeVideoMaker's private Python logic is NOT included.
@@ -21,7 +21,7 @@ not on GitHub Actions. No custom npm dependencies are installed in the agent.
 ## V1 — on-boarding (French first)
 
 1. User gives an idea; agent asks only for missing parameters: 15/30 sec,
-   story tone, style, 16:9/9:16, Quest Strict or Plus.
+   story tone, 16:9, and Quest First or Plus. The validated V1 production preset is 15 seconds / 3 scenes.
 2. Agent builds synopsis, scene list, planned shots, voice-over and camera moves;
    it emits a `[[STORY_PLAN:...]]` marker. Conversation history must be supplied
    again on subsequent requests: Pollinations Responses are stateless.
@@ -83,6 +83,14 @@ planning. During production each media model ID must be in the verified
 whitelist, and tool calls are capped at 13.
 
 **Important limitation:** the Pollen estimate is advisory, NOT a transactional spending limit. There is no artificial spending cap enforced by the agent. The existing user's key budget and Pollinations billing rules remain authoritative.
+
+## Verified FFmpeg rendering (15 seconds, 3 scenes)
+
+A real first test exposed that a single JPEG source lasts only 0.04 seconds to FFmpeg; the originally generated `-shortest` command produced an invalid 0.02-second output. A second test rendered valid 15-second H.264/AAC, but did not actually pan or zoom. The fixed preset now forces `-loop 1 -framerate 25 -t 5` on EACH image, uses `zoompan` driven by the output frame index `on`, pads audio to 15 seconds, and never uses `-shortest`. An optional fifth source can supply an already-hosted SRT. The server-hosted MCP FFmpeg output was verified as 15.000 seconds, 375 video frames, 370 distinct frames, and an AAC audio track.
+
+Demo: [BEEP-7 animated 15s MP4](demos/beep7_15s.mp4). If Pollinations media URLs fail to play inline, download this `.mp4` from GitHub.
+
+The agent pins these arguments in `verifiedFfmpegPreset()` and rejects unsupported formats rather than reporting success for an untested montage. Other durations will require their own tested presets. No new model generation was needed to fix the original output.
 
 ## Testing on PC2
 

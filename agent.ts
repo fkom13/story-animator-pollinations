@@ -6,7 +6,7 @@
  * Safety: planning costs a small text-model request; media production requires
  * a storyboard, preflight and an explicit second confirmation.
  */
-const VERSION = "0.1.2";
+const VERSION = "0.1.3";
 const MODEL_PREFERENCES = {
   script: ["deepseek/deepseek-v4.1-flash", "openai/gpt-6-luna", "minimax/minimax-m3.1-flash"],
   production: ["openai/gpt-5.4-nano", "openai/gpt-6-luna", "deepseek/deepseek-v4.1-flash"],
@@ -16,8 +16,8 @@ const MODEL_PREFERENCES = {
   stt: ["microsoft/mai-transcribe-2", "openai/whisper-large-v3"]
 };
 const REQUIRED_CATEGORIES = ["text", "image", "audio"];
-const MAX_SECONDS = 30;
-const MAX_SCENES = 5;
+const MAX_SECONDS = 15;
+const MAX_SCENES = 3;
 // No artificial Pollen spending ceiling. Account/key limits remain authoritative.
 function reply(message, status=200, stream=false) {
   const id="resp_"+crypto.randomUUID(), mid="msg_"+crypto.randomUUID();
@@ -143,7 +143,7 @@ async function runPreflight({pollinations,mcp},plan) {
   const messages=[], problems=[];
   if (!plan) return {ok:false,problems:["Storyboard introuvable. Recommencer la proposition."],messages};
   if(plan.duration>MAX_SECONDS || plan.scenes>MAX_SCENES || plan.duration<=0 || plan.scenes<=0) {
-    problems.push("Pour ce prototype, le format est limité à 30 secondes et 5 scènes (limite technique, pas limite de Pollen).");
+    problems.push("Pour ce pilote, seul le format validé de 15 secondes et 3 scènes est exécutable (ce n’est pas une limite financière).");
   }
   let registry=new Map(),key=null,balance=null;
   try {registry=await obtainCatalog(pollinations);} catch(e){problems.push("Catalogue modèles inaccessible : "+e.message);}
@@ -204,6 +204,40 @@ function toolCategory(name) {
   if(/ffmpeg|render|video|media/.test(s)) return "ffmpeg";
   return null;
 }
+// Verified against the Pollinations FFmpeg MCP (2026-11-08).
+// A still image without -loop is only one frame; never use -shortest here.
+// This V1 preset is deliberately restricted to the validated 3 x 5-second format.
+function verifiedFfmpegPreset(sources,plan) {
+  if(plan.duration!==15 || plan.scenes!==3) {
+    throw Error("Preset de rendu validé uniquement pour 15 secondes et 3 scènes. Aucun rendu lancé dans un format non testé.");
+  }
+  if(!Array.isArray(sources) || ![4,5].includes(sources.length) ||
+     !sources.every(u=>typeof u==="string" && /^https:\/\/media\.pollinations\.ai\/[a-zA-Z0-9-]+$/.test(u))) {
+    throw Error("FFmpeg attend 3 URLs d'images Pollinations, puis 1 URL audio et éventuellement 1 URL SRT (dans cet ordre).");
+  }
+  const moves=[
+    "z='1+0.19*on/124':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2'",
+    "z='1.18-0.13*on/124':x='(iw-iw/zoom)*on/124':y='(ih-ih/zoom)/2'",
+    "z='1.04+0.15*on/124':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2'"
+  ];
+  const parts=moves.map((motion,i)=>{
+    const fade=i<2?",fade=t=in:st=0:d=0.2,fade=t=out:st=4.8:d=0.2":",fade=t=in:st=0:d=0.2";
+    return "["+i+":v]scale=960:540:force_original_aspect_ratio=increase,crop=960:540,zoompan="+motion+
+      ":d=1:fps=25:s=640x360"+fade+"[v"+i+"]";
+  });
+  const captions=sources.length===5
+    ?",subtitles=input4:force_style='FontSize=17,Outline=1,Alignment=2,MarginV=18'"
+    :"";
+  const filter=parts.join(";")+";[v0][v1][v2]concat=n=3:v=1:a=0"+captions+
+    "[v];[3:a]apad,atrim=duration=15[a]";
+  const args=[];
+  for(let i=0;i<3;i++) args.push("-loop","1","-framerate","25","-t","5","-i","input"+i);
+  args.push("-i","input3","-filter_complex",filter,"-map","[v]","-map","[a]","-t","15",
+    "-r","25","-c:v","libx264","-preset","veryfast","-crf","26","-pix_fmt","yuv420p",
+    "-c:a","aac","-b:a","96k","-movflags","+faststart");
+  if(args.length>64 || filter.length>1024) throw Error("Preset trop long pour le MCP FFmpeg.");
+  return {sources,args,outputExtension:"mp4"};
+}
 function exposedTools(catalog,pick,plan) {
   // Do not expose account management, web, computer, arbitrary-code, or video-model tools.
   const merged={},maxCalls=13;
@@ -224,6 +258,10 @@ function exposedTools(catalog,pick,plan) {
         if(!authorized.includes(modelId)) throw Error("Modèle absent de la whitelist vérifiée : "+modelId);
         if(plan.mode==="quest" && !authorized.includes(modelId)) throw Error("Quest First : modèle refusé.");
       }
+      if(kind==="ffmpeg") {
+        const pinned=verifiedFfmpegPreset(args?.sources,plan);
+        return execute(pinned,...other);
+      }
       return execute(args,...other);
     }};
   }
@@ -233,13 +271,13 @@ function onboardingInstructions(id) {
   return [
     "Tu es Story Animator, un réalisateur français chaleureux, précis, créatif et économe. Version "+VERSION+".",
     "Tu réalises EXCLUSIVEMENT des films à partir d'images fixes animées par FFmpeg : T2I / I2I, zoompan, panoramiques, fondus. STRICTEMENT AUCUN modèle T2V, I2V, Kling, Veo, Runway, Sora, ni clips vidéo générés par IA.",
-    "Dialoguer naturellement. À partir d'une idée, demander seulement les paramètres manquants : durée 15 ou 30 s, format 16:9 ou 9:16, style, langue, ton et mode Quest First ou Qualité Plus.",
+    "Dialoguer naturellement. À partir d'une idée, demander seulement les paramètres manquants : durée 15 secondes et 3 scènes (preset vérifié), format 16:9, style, langue, ton et mode Quest First ou Qualité Plus.",
     "Par défaut : Quest First, 15 secondes, 3 scènes, 16:9. Quest First sélectionne les modèles compatibles Quest mais ne garantit pas que Paid ne sera jamais utilisé. Ne jamais réclamer de clé, de token, ni de secret.",
     "Proposer un synopsis et trois scènes avec narration, prompts d'images et mouvements caméra zoompan/pan. Ne jamais promettre une qualité/une disponibilité non testée.",
     "Pour chaque scène préciser durée, personnage, cohérence visuelle, texte dit, image de référence, mouvement. Trois scènes de cinq secondes pour une demande de 15 s. Ecrire une narration PRONONÇABLE en 15 secondes maximum, idéalement 25 à 32 mots au total.",
     "Afficher UNIQUEMENT les modèles T2I, I2I, TTS et STT candidats présents dans nos préférences. Ne pas citer de modèle vidéo. Donner une estimation facultative des frais en Pollen, SANS plafond artificiel ni promesse de ne jamais le dépasser. Les limites imposées par la clé Pollinations demeurent applicables.",
     "Quand le storyboard est complet, écrire EXACTEMENT le marqueur [[STORY_PLAN:"+id+"|MODE:quest|DURATION:15|SCENES:3|BUDGET:0.5]]. Le champ BUDGET est une estimation indicative, pas un plafond.",
-    "Si l'utilisateur a choisi 'Qualité Plus', remplacer MODE:quest par MODE:plus; si durée 30 s, remplacer DURATION:15 par 30; ne jamais dépasser 5 scènes.",
+    "Si l'utilisateur a choisi 'Qualité Plus', remplacer MODE:quest par MODE:plus. Le format 30 secondes et les formats non 16:9 seront ajoutés après validation de presets distincts.",
     "Ne jamais écrire un marqueur d'approbation de sécurité.",
     "Demander à l'utilisateur de répondre exactement PRODUIRE "+id+" pour déclencher les contrôles des autorisations avant montage.",
     "La création de scénario utilise un modèle texte facturé à l'appelant; aucun média n'est généré dans cette phase.",
@@ -254,7 +292,7 @@ function productionInstructions(plan,selected) {
     "MODE="+plan.mode+". Modèles obligatoires :"+JSON.stringify(selected)+". Ne jamais utiliser un autre modèle, même en fallback.",
     "Utiliser les outils réels : créer 3 images T2I fixes (et éventuellement une édition I2I), une voix française de 15 secondes, une transcription si possible et une composition FFmpeg. Aucun modèle I2V/T2V. Agir par appels outils rapidement plutôt que développer une analyse longue.",
     "Si aucune transcription à horodatage n'est obtenue, produire les sous-titres approximatifs découpés d'après la durée de la narration et le dire honnêtement.",
-    "Concevoir avec le MCP FFmpeg 15 secondes de vidéo 16:9 animant les trois images fixes par zoompan, panoramiques, fondus. Mixer la voix si disponible, incruster des sous-titres seulement si le serveur fournit le filtre nécessaire. Ne pas appeler de modèle de génération vidéo.",
+    "Pour runFfmpeg, transmettre dans sources EXACTEMENT 3 URLs HTTPS de JPEG Pollinations (scènes 1, 2, 3) suivies de l’URL audio MP3; ajouter une 5e URL de sous-titres SRT seulement si elle existe déjà. Les arguments FFmpeg seront remplacés automatiquement par notre preset validé : -loop, zoompan dynamique et audio sur 15 secondes, sans -shortest. Ne jamais générer ni inventer une URL SRT. Ne pas appeler de modèle vidéo.",
     "Les outils reçoivent des URLs médias HTTPS publiques si nécessaires. Respecter chaque schéma d'arguments renvoyé par MCP.",
     "Limiter les appels à 13 pour un film pilote afin d'éviter les boucles inutiles ; il ne s'agit PAS d'un plafond de Pollen. Si une étape échoue, rendre compte sans inventer d'URL.",
     "Ne pas utiliser de services, clés ni dépôts privés IACA/FreeVideoMaker.",
