@@ -27,6 +27,41 @@ Before deciding on a model, the agent checks the *current caller's* delegated ri
 - For known matching LLMs, an independent benchmark is fetched live from ArtificialWatch Bench Index, CC BY 4.0. Attribution: https://artificialwatch.com/benchmarks ; dataset https://artificialwatch.com/data/bench-index.json . This is a general LLM benchmark, not a creativity or TTS benchmark; unpaired models get no invented benchmark score.
 - Artificial Analysis offers separate media ranking endpoints but requires its own API key and redistribution license, so it is not silently accessed via customer credentials.
 
+## Decision fallback engine (v0.2.1)
+
+The caller's key is checked first. Then the agent fetches the live model
+catalogue, pricing, 60-minute health metrics and external LLM index. The
+typed-decision service reviews the scenario and **up to eight distinct
+production categories in one call** (screenwriter, director, T2I, I2I, TTS,
+vision, orchestrator and transcription). It receives only explicitly eligible
+models and their metadata; never the raw API key.
+
+The chain is **ordered and strictly enforced**:
+
+- With a Pro project, a key allowing Paid (questPollenOnly=false), and JEV
+  available: **D3 Free → JEV Paid → Microsoft-Decision-1 Quest → JavaScript**.
+- Eco, Medium, or a key enforcing Quest-only: **D3 Free →
+  Microsoft-Decision-1 Quest → JavaScript**.
+- Missing/disabled/not-allowed models are skipped automatically. Every
+  permission, health and paid_only check uses the caller's latest catalogue.
+  Model success cannot override the JavaScript safety filter.
+
+A decision falls back on access denial, insufficient credits, server errors,
+timeouts, missing JSON, unexpected option or malformed confidence. The old
+JavaScript weighted scorer is the deterministic last fallback. A successful
+decision model may reorder the primary choice within an eligible category;
+the remaining JavaScript-ranked candidates become role fallbacks.
+
+The decision model's probabilities are estimates, not calibration
+guarantees. D3 is a free third-party provider whose description warns
+submitted inputs may be logged or used for model training. Do not send
+confidential briefs to D3 without choosing an appropriate privacy policy.
+
+Validation: 12 cascade-specific tests plus 12 existing workflow tests,
+all passing. A real 2026-11-08 smoke test produced complete eight-category
+decisions from D3, JEV and Microsoft (5.90 s / 5.93 s / 6.75 s respectively)
+over the same 428-model catalogue. This test generated no images or videos.
+
 ## User conversation
 
 1. User proposes an idea, tone and desired length. The agent recommends 15, 30, or 60 seconds, but custom lengths are supported subject to practical runtime/size constraints.

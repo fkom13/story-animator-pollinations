@@ -30,10 +30,13 @@ function detectBrief(input){
   pace:/action|rapide|combat|street|clip/i.test(input)?0.78:0.5};
 }
 async function classify(polli,x,brief){
- let preferred=x.ranks.classifier||[];
- // JEV is selected only when the caller's key and chosen policy permit Paid.
- let preferredJev=preferred.find(m=>m.id.includes("jev")&&m.paid===true);
- const chosen=(brief.tier==="pro"&&preferredJev)||preferred.find(m=>!m.paid)||preferred[0];
+ // Typed decision models are handled by decideRoutes(). Here we need a
+ // generative text model that can return the creative classification JSON.
+ const preferred=(x.ranks.classifier||[]).filter(m=>{
+  const info=x.models.find(v=>v.id===m.id);
+  return !info?.supported_endpoints?.includes("/alpha/decisions");
+ });
+ const chosen=preferred.find(m=>!m.paid)||preferred[0];
  if(!chosen)return {genre:"fiction",energy:brief.pace,imageStyle:brief.style,detail:"Classification locale",model:null};
  try{
   let obj=await generateJson(polli,chosen.id,
@@ -148,6 +151,6 @@ function planText(st,x){
   "Voix : "+(b.voice?"oui":"non")+" ; sous-titres : "+(b.subtitles?"demandés":"non")+" ; format : "+b.aspect+".\n"+
   "Coût estimé : Quest "+c.quest.join(" à ")+" Pollen, Paid "+c.paid.join(" à ")+" Pollen"+
   (c.uncertain.length?"; à préciser : "+c.uncertain.join(", "):"")+
-  ".\n\nClassement des modèles réévalué à cette étape :\n"+modelChoices(x.ranks)+
+  ".\n\n"+decisionDescription(st.decision)+"\nClassement des modèles réévalué à cette étape :\n"+modelChoices(x.ranks)+
   "\n\nValide le scénario avec VALIDER SCRIPT "+st.id+", ou demande une réécriture.";
 }

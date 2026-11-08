@@ -69,9 +69,9 @@ export default async function agent({model,respond,mcp,pollinations,request}){
  let st=getState(history);
  let tier=st?.brief?.tier||detectBrief(msg).tier;
  if(!TIERS[tier])tier="eco";
- let x=applyModelChoices(await inspect(pollinations,mcp,tier),st);
+ let x=applyModelChoices(applyDecisionRoutes(await inspect(pollinations,mcp,tier),st?.decision),st);
  if(!msg||/^(VERIFIER|VÉRIFIER|DIAGNOSTIC|CHECK)$/i.test(msg)){
-  return send(diagnosis(x,tier,true)+
+  return send(diagnosis(x,tier,true)+"\n\n"+decisionDescription(null,decisionChain(x,{tier}))+ 
    "\n\nPropose une idée d'histoire, ton style et si tu souhaites une narration. Je proposerai 15, 30 et 60 secondes, mais tu peux demander une durée personnalisée.");
  }
  const selectedModel=msg.match(/^(MODELE|FALLBACK)\s+([a-z]+)\s+([A-Za-z0-9/._:-]+)$/i);
@@ -89,10 +89,13 @@ export default async function agent({model,respond,mcp,pollinations,request}){
  if(/^MODE\s+(ECO|MEDIUM|PRO)$/i.test(msg)&&st){
   const newTier=msg.match(/^MODE\s+(ECO|MEDIUM|PRO)$/i)[1].toLowerCase();
   if(["images","render","final","done"].includes(st.step))return send("Production déjà engagée : changer de mode invaliderait les médias facturés. Termine ou crée un nouveau projet.",st);
-  const b={...st.brief,tier:newTier};x=applyModelChoices(await inspect(pollinations,mcp,newTier),st);
-  st={...st,brief:b};
+  const b={...st.brief,tier:newTier};
+  x=await inspect(pollinations,mcp,newTier);
+  const decision=await decideRoutes(pollinations,x,b);
+  x=applyModelChoices(applyDecisionRoutes(x,decision),st);
+  st={...st,brief:b,decision};
   if(st.script){st.shots=shotPlan(st.script,b,st.classification);st.step="script";st.images=[];st.clips=[];st.voiceUrl=null;st.finalUrl=null}
-  return send(diagnosis(x,newTier,true)+
+  return send(diagnosis(x,newTier,true)+"\n"+decisionDescription(decision)+
    (st.script?"\n\n"+planText(st,x):"\nRéponds SCENARIO "+b.duration+" "+newTier.toUpperCase()+" pour continuer."),st);
  }
  const launch=msg.match(/^SCENARIO\s+(\d{1,6})(?:\s+(ECO|MEDIUM|PRO))?$/i);
@@ -103,7 +106,10 @@ export default async function agent({model,respond,mcp,pollinations,request}){
   const pastIdea=history.filter(m=>m.role==="user").map(m=>txt(m.content)).filter(s=>!/^(SCENARIO|VALIDER|CONTINUER|MODE)/i.test(s)).join(" ");
   const base=st?.brief||detectBrief(pastIdea||msg);
   const b={...base,duration:seconds,tier:mode};
-  x=applyModelChoices(await inspect(pollinations,mcp,mode),st);
+  x=await inspect(pollinations,mcp,mode);
+  const decision=st?.decision&&st?.brief?.tier===mode&&st?.brief?.duration===seconds?
+    st.decision:await decideRoutes(pollinations,x,b);
+  x=applyModelChoices(applyDecisionRoutes(x,decision),st);
   if(!x.can.scenario)return send(diagnosis(x,mode,true)+"\nImpossible de construire un scénario avec cette clé.");
   const classification=await classify(pollinations,x,b);
   let script;
@@ -118,7 +124,7 @@ export default async function agent({model,respond,mcp,pollinations,request}){
     }catch(e){classification.detail+=" ; révision réalisateur indisponible : "+String(e.message||e).slice(0,90)}
    }
   }catch(e){return send("Création du scénario indisponible : "+String(e.message||e).slice(0,240)+"\nLe catalogue et l'onboarding restent accessibles.",st)}
-  st={v:2,id:hashId(b.idea+"|"+seconds+"|"+mode),step:"script",modelOverrides:st?.modelOverrides||{},
+  st={v:2,id:hashId(b.idea+"|"+seconds+"|"+mode),step:"script",modelOverrides:st?.modelOverrides||{},decision,
    brief:b,classification,script,shots:shotPlan(script,b,classification),
    images:[],clips:[],voiceUrl:null,finalUrl:null,review:null};
   return send(diagnosis(x,mode,false)+"\n\n"+planText(st,x),st);
@@ -179,14 +185,17 @@ export default async function agent({model,respond,mcp,pollinations,request}){
    "\n\nCommandes : SCENARIO "+st.brief.duration+" "+st.brief.tier.toUpperCase()+
    " ; VALIDER SCRIPT "+st.id+" ; MODE ECO|MEDIUM|PRO ; MODELE t2i fournisseur/modèle ; FALLBACK t2i fournisseur/modèle ; CONTINUER selon l'étape.",st);
  }
- const brief=detectBrief(msg);x=await inspect(pollinations,mcp,brief.tier);
+ const brief=detectBrief(msg);
+ x=await inspect(pollinations,mcp,brief.tier);
+ const decision=await decideRoutes(pollinations,x,brief);
+ x=applyDecisionRoutes(x,decision);
  const classification=await classify(pollinations,x,brief);
  const roughSlots=Math.ceil(brief.duration/5)*TIERS[brief.tier].per5;
  const estimate=billEstimate(brief,x,new Array(roughSlots).fill({}));
- st={v:2,id:hashId(msg),step:"onboard",brief,classification};
+ st={v:2,id:hashId(msg),step:"onboard",brief,classification,decision};
  return send(diagnosis(x,brief.tier,true)+
   "\n\n🎬 TON HISTOIRE\n"+brief.idea+
-  "\nClassification : "+classification.genre+" / "+classification.imageStyle+
+  "\n"+decisionDescription(decision)+"\nClassification : "+classification.genre+" / "+classification.imageStyle+
   " ; intensité="+classification.energy+" ; modèle décisionnel="+(classification.model||"heuristique")+".\n"+
   "Je propose 15, 30 ou 60 secondes, ou une durée personnalisée. Trois modes : "+
   "ECO (Quest-only, au plus 1 image/5 s), MEDIUM (Quest-only, au plus 3 images/5 s), "+

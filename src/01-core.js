@@ -1,5 +1,5 @@
 /* Story Animator v0.2 — core. Concatenated into root agent.ts at build. */
-const VERSION="0.2.0";
+const VERSION="0.2.1";
 const TIERS={eco:{per5:1,paid:false},medium:{per5:3,paid:false},pro:{per5:5,paid:true}};
 const ROLES=["classifier","writer","director","orchestrator","vision","t2i","i2i","tts","stt"];
 const EDITORIAL_PRIOR={
