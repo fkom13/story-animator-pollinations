@@ -1,0 +1,18 @@
+name: Pollinations Code Agent Sync
+on:
+  push:
+    branches: [main]
+    paths:
+      - "agent.ts"
+      - "README.md"
+      - ".github/workflows/sync.yml"
+  workflow_dispatch:
+jobs:
+  sync:
+    if: vars.POLLINATIONS_SYNC_URL != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync deployed agent from default branch
+        env:
+          SYNC_URL: ${{ vars.POLLINATIONS_SYNC_URL }}
+        run: curl --fail --retry 2 --retry-delay 30 -X POST "$SYNC_URL"

@@ -1,0 +1,14 @@
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+coverage/
+tmp/
+*.log
+*.bak
+*.secret
+*.token
+*.pem
+*.key
+.DS_Store
