@@ -1,0 +1,408 @@
+{
+  "schema": "story-animator-qa-trace-v04",
+  "job": "eco-fable-15s-9shots",
+  "releaseStatus": "QA pilot, not final release",
+  "settings": {
+    "tier": "eco",
+    "durationSeconds": 15,
+    "aspect": "9:16",
+    "density": {
+      "minimum": 1,
+      "maximum": 3,
+      "perFiveSeconds": [
+        3,
+        3,
+        3
+      ]
+    },
+    "shots": 9,
+    "distinctGeneratedImages": 8
+  },
+  "roles": {
+    "writer": {
+      "modelRequested": null,
+      "note": "Reused prior script for this QA; no new LLM writing call"
+    },
+    "creativeDirector": {
+      "modelRequested": null,
+      "note": "Storyline manually reviewed; deterministic audio-sync shot planner"
+    },
+    "soundDirector": {
+      "modelRequested": null,
+      "note": "Existing approved dialogue was reused"
+    },
+    "T2I": {
+      "modelRequested": "black-forest-labs/flux.2-klein-4b",
+      "previousAssets": 1
+    },
+    "I2I": {
+      "modelRequested": "black-forest-labs/flux.2-klein-4b",
+      "previousAssets": 2,
+      "newAssets": 5,
+      "fallbackInvoked": false
+    },
+    "TTS": {
+      "modelRequested": "microsoft/mai-voice-2.1-flash",
+      "reused": true
+    },
+    "STT": {
+      "modelRequested": "microsoft/mai-transcribe-2",
+      "reused": true
+    },
+    "editor": {
+      "modelRequested": "local FFmpeg",
+      "providerPaidCall": false
+    },
+    "music": {
+      "source": "original procedural composition",
+      "paidProvider": false
+    },
+    "SFX": {
+      "source": "original procedural synthesized effect",
+      "paidProvider": false
+    }
+  },
+  "newImageRequests": [
+    {
+      "shotIndex": 1,
+      "modelRequested": "black-forest-labs/flux.2-klein-4b",
+      "providerConfirmedModel": null,
+      "referenceImage": "https://media.pollinations.ai/a713017879808d6bc4b4c411750423644425fc40cec42f8d8df132eec5089f77",
+      "requestedSize": "720x1280",
+      "returnedSize": [
+        720,
+        1280
+      ],
+      "fallbackUsed": false,
+      "attempt": 1,
+      "durationMs": 12519,
+      "url": "https://media.pollinations.ai/2f7e7a4c64fa3fb1403c4a4927f0dc739ce6c9a154a2f9fc3c68257641070bdf",
+      "sha256": "015b49bf3b895f15155b6c163feaafbc9ae2b4f20d9248b22ec78111737b3928",
+      "providerReportedCostPollen": null,
+      "error": null
+    },
+    {
+      "shotIndex": 2,
+      "modelRequested": "black-forest-labs/flux.2-klein-4b",
+      "providerConfirmedModel": null,
+      "referenceImage": "https://media.pollinations.ai/a713017879808d6bc4b4c411750423644425fc40cec42f8d8df132eec5089f77",
+      "requestedSize": "720x1280",
+      "returnedSize": [
+        720,
+        1280
+      ],
+      "fallbackUsed": false,
+      "attempt": 1,
+      "durationMs": 11887,
+      "url": "https://media.pollinations.ai/fe2238a78607482dfbc2b8fa5d23c33a37b23421d8d06d31d7c9aa5b875418d2",
+      "sha256": "e03e21e81a103554e83672555b7bbba54aa60391928b27dd888255bca45a88e9",
+      "providerReportedCostPollen": null,
+      "error": null
+    },
+    {
+      "shotIndex": 4,
+      "modelRequested": "black-forest-labs/flux.2-klein-4b",
+      "providerConfirmedModel": null,
+      "referenceImage": "https://media.pollinations.ai/a713017879808d6bc4b4c411750423644425fc40cec42f8d8df132eec5089f77",
+      "requestedSize": "720x1280",
+      "returnedSize": [
+        720,
+        1280
+      ],
+      "fallbackUsed": false,
+      "attempt": 1,
+      "durationMs": 12412,
+      "url": "https://media.pollinations.ai/e1191076f15432864d61418c1630a3f73bb53d7b059ff69765ef1f7e775e5dea",
+      "sha256": "6c1c47703a2159ea5f115ef5bdeb8f4c9f351ae13656a24d3d78692cbb40b75f",
+      "providerReportedCostPollen": null,
+      "error": null
+    },
+    {
+      "shotIndex": 5,
+      "modelRequested": "black-forest-labs/flux.2-klein-4b",
+      "providerConfirmedModel": null,
+      "referenceImage": "https://media.pollinations.ai/a713017879808d6bc4b4c411750423644425fc40cec42f8d8df132eec5089f77",
+      "requestedSize": "720x1280",
+      "returnedSize": [
+        720,
+        1280
+      ],
+      "fallbackUsed": false,
+      "attempt": 1,
+      "durationMs": 10695,
+      "url": "https://media.pollinations.ai/c153f22d74ae18bafdca2d80aed8985cd992a00a67200ce979aab03bef902931",
+      "sha256": "56873e9abc913ddfb386a01a0940bdd4dbb3077a6fcdcb76e84aabce780c16d0",
+      "providerReportedCostPollen": null,
+      "error": null
+    },
+    {
+      "shotIndex": 6,
+      "modelRequested": "black-forest-labs/flux.2-klein-4b",
+      "providerConfirmedModel": null,
+      "referenceImage": "https://media.pollinations.ai/a713017879808d6bc4b4c411750423644425fc40cec42f8d8df132eec5089f77",
+      "requestedSize": "720x1280",
+      "returnedSize": [
+        720,
+        1280
+      ],
+      "fallbackUsed": false,
+      "attempt": 1,
+      "durationMs": 11660,
+      "url": "https://media.pollinations.ai/52d0f17a9c923c931177c5127cc5e2362073c4d6038c2f13f72988fdfc091f8f",
+      "sha256": "71e2a240e1ecd6570a6c30b04349db3ec2a3bc9e447431808437645e38b92634",
+      "providerReportedCostPollen": null,
+      "error": null
+    }
+  ],
+  "priorImageRequests": {
+    "count": 3,
+    "modelsKnown": true,
+    "requestTimingHistoricalUnknown": true,
+    "perCallCostUnknown": true
+  },
+  "audioLines": [
+    {
+      "speaker": "Renard",
+      "voiceId": "fr-FR-Marc",
+      "text": "Bonsoir, je suis le Renard.",
+      "sttResult": "Bonsoir, je suis le renard.",
+      "measuredDurationSeconds": 1.92,
+      "ttsModel": "microsoft/mai-voice-2.1-flash",
+      "sttModel": "microsoft/mai-transcribe-2"
+    },
+    {
+      "speaker": "Renard",
+      "voiceId": "fr-FR-Marc",
+      "text": "Tes baskets sont magnifiques ! Regarde là-haut, juste une seconde !",
+      "sttResult": "Tes baskets sont magnifiques ! Regarde là-haut, juste une seconde.",
+      "measuredDurationSeconds": 4.056,
+      "ttsModel": "microsoft/mai-voice-2.1-flash",
+      "sttModel": "microsoft/mai-transcribe-2"
+    },
+    {
+      "speaker": "Corbeau",
+      "voiceId": "fr-FR-Soleil",
+      "text": "Hé ! Mais où sont passées mes chaussures ?",
+      "sttResult": "Hey ! Mais où sont passées mes chaussures ?",
+      "measuredDurationSeconds": 4.968,
+      "ttsModel": "microsoft/mai-voice-2.1-flash",
+      "sttModel": "microsoft/mai-transcribe-2"
+    },
+    {
+      "speaker": "Renard",
+      "voiceId": "fr-FR-Marc",
+      "text": "Les compliments coûtent parfois très cher !",
+      "sttResult": "Les compliments coûtent parfois très cher.",
+      "measuredDurationSeconds": 2.52,
+      "ttsModel": "microsoft/mai-voice-2.1-flash",
+      "sttModel": "microsoft/mai-transcribe-2"
+    }
+  ],
+  "shotTimeline": [
+    {
+      "n": 0,
+      "windowIndex": 0,
+      "start": 0,
+      "duration": 2.17,
+      "beat": 0,
+      "subshot": 0,
+      "within": 3,
+      "intensity": 0.67,
+      "motion": "slow-hold",
+      "visualIntent": "establishing_wide",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l0",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "pilot-frame-1.jpg"
+    },
+    {
+      "n": 1,
+      "windowIndex": 0,
+      "start": 2.17,
+      "duration": 1.415,
+      "beat": 1,
+      "subshot": 1,
+      "within": 3,
+      "intensity": 0.8,
+      "motion": "pull-back",
+      "visualIntent": "speaker_reaction",
+      "audioSync": {
+        "reason": "spoken_line_start",
+        "lineId": "pilot-l1",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "measured_utterance_start"
+      },
+      "localImage": "v04-shot-01.jpg"
+    },
+    {
+      "n": 2,
+      "windowIndex": 0,
+      "start": 3.585,
+      "duration": 1.415,
+      "beat": 1,
+      "subshot": 2,
+      "within": 3,
+      "intensity": 0.8,
+      "motion": "tilt-up",
+      "visualIntent": "character_closeup",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l1",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "v04-shot-02.jpg"
+    },
+    {
+      "n": 3,
+      "windowIndex": 1,
+      "start": 5,
+      "duration": 1.476,
+      "beat": 1,
+      "subshot": 0,
+      "within": 3,
+      "intensity": 0.8,
+      "motion": "pan-right",
+      "visualIntent": "establishing_wide",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l1",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "pilot-frame-2.jpg"
+    },
+    {
+      "n": 4,
+      "windowIndex": 1,
+      "start": 6.476,
+      "duration": 1.762,
+      "beat": 2,
+      "subshot": 1,
+      "within": 3,
+      "intensity": 0.92,
+      "motion": "slow-hold",
+      "visualIntent": "speaker_reaction",
+      "audioSync": {
+        "reason": "spoken_line_start",
+        "lineId": "pilot-l2",
+        "speakerId": "corbeau",
+        "cue": null,
+        "source": "measured_utterance_start"
+      },
+      "localImage": "v04-shot-04.jpg"
+    },
+    {
+      "n": 5,
+      "windowIndex": 1,
+      "start": 8.238,
+      "duration": 1.762,
+      "beat": 2,
+      "subshot": 2,
+      "within": 3,
+      "intensity": 0.92,
+      "motion": "pan-left",
+      "visualIntent": "character_closeup",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l2",
+        "speakerId": "corbeau",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "v04-shot-05.jpg"
+    },
+    {
+      "n": 6,
+      "windowIndex": 2,
+      "start": 10,
+      "duration": 1.694,
+      "beat": 2,
+      "subshot": 0,
+      "within": 3,
+      "intensity": 0.92,
+      "motion": "push-in",
+      "visualIntent": "establishing_wide",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l2",
+        "speakerId": "corbeau",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "v04-shot-06.jpg"
+    },
+    {
+      "n": 7,
+      "windowIndex": 2,
+      "start": 11.694,
+      "duration": 2.52,
+      "beat": 3,
+      "subshot": 1,
+      "within": 3,
+      "intensity": 0.23,
+      "motion": "pan-right",
+      "visualIntent": "speaker_reaction",
+      "audioSync": {
+        "reason": "spoken_line_start",
+        "lineId": "pilot-l3",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "measured_utterance_start"
+      },
+      "localImage": "pilot-frame-3.jpg"
+    },
+    {
+      "n": 8,
+      "windowIndex": 2,
+      "start": 14.214,
+      "duration": 0.786,
+      "beat": 3,
+      "subshot": 2,
+      "within": 3,
+      "intensity": 0.23,
+      "motion": "diagonal",
+      "visualIntent": "character_closeup",
+      "audioSync": {
+        "reason": "spoken_line_end",
+        "lineId": "pilot-l3",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "scene_or_action_estimate"
+      },
+      "localImage": "pilot-frame-3.jpg"
+    }
+  ],
+  "costs": {
+    "newImageCalls": 5,
+    "observedPollenBalanceDelta": 0.025,
+    "perCallProviderReportedCosts": null,
+    "isVerifiedRealProjectCost": false,
+    "reason": "Global balance delta is not necessarily exclusively attributable to this pilot."
+  },
+  "output": {
+    "file": "quest-human-fable-pilot-15s-v04-9shots.mp4",
+    "durationActualSeconds": "15.000000",
+    "resolution": "720x1280",
+    "videoCodec": "h264",
+    "audioCodec": "aac",
+    "sha256": "5257aca3c3ffda5b3e45656c297629241cee86dcc9c9fe59811077b3b88c547d",
+    "sizeBytes": 1438691,
+    "decodeValidation": "passed",
+    "captionTrack": "subtitles-native.ass",
+    "contactSheet": "v04-contact-after-render.jpg"
+  },
+  "limits": [
+    "Full frame-level automatic vision reviewer is not implemented for this QA clip.",
+    "Cuts inside a spoken phrase use estimated relative position, not word-level forced alignment.",
+    "One still image is reused for the final 0.786 seconds.",
+    "Source audio and script are reused; this pilot principally tests visual synchronization."
+  ]
+}

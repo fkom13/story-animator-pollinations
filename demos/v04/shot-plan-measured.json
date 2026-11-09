@@ -1,0 +1,405 @@
+{
+  "project": "v04-eco-realtime-audio-sync-QA",
+  "tier": "eco",
+  "duration": 15,
+  "modelRequestedForNewImages": "black-forest-labs/flux.2-klein-4b",
+  "shotCount": 9,
+  "qa": {
+    "tier": "eco",
+    "duration": 15,
+    "total": 9,
+    "max": 9,
+    "min": 3,
+    "windows": [
+      {
+        "index": 0,
+        "start": 0,
+        "end": 5,
+        "images": 3,
+        "permitted": [
+          1,
+          3
+        ],
+        "covered": true,
+        "chosen": [
+          {
+            "n": 0,
+            "at": 0,
+            "seconds": 2.17,
+            "intent": "establishing_wide",
+            "sync": {
+              "reason": "spoken_utterance_progression",
+              "lineId": "pilot-l0",
+              "speakerId": "renard",
+              "cue": null,
+              "source": "estimated_within_measured_utterance"
+            }
+          },
+          {
+            "n": 1,
+            "at": 2.17,
+            "seconds": 1.415,
+            "intent": "speaker_reaction",
+            "sync": {
+              "reason": "spoken_line_start",
+              "lineId": "pilot-l1",
+              "speakerId": "renard",
+              "cue": null,
+              "source": "measured_utterance_start"
+            }
+          },
+          {
+            "n": 2,
+            "at": 3.585,
+            "seconds": 1.415,
+            "intent": "character_closeup",
+            "sync": {
+              "reason": "spoken_utterance_progression",
+              "lineId": "pilot-l1",
+              "speakerId": "renard",
+              "cue": null,
+              "source": "estimated_within_measured_utterance"
+            }
+          }
+        ]
+      },
+      {
+        "index": 1,
+        "start": 5,
+        "end": 10,
+        "images": 3,
+        "permitted": [
+          1,
+          3
+        ],
+        "covered": true,
+        "chosen": [
+          {
+            "n": 3,
+            "at": 5,
+            "seconds": 1.476,
+            "intent": "establishing_wide",
+            "sync": {
+              "reason": "spoken_utterance_progression",
+              "lineId": "pilot-l1",
+              "speakerId": "renard",
+              "cue": null,
+              "source": "estimated_within_measured_utterance"
+            }
+          },
+          {
+            "n": 4,
+            "at": 6.476,
+            "seconds": 1.762,
+            "intent": "speaker_reaction",
+            "sync": {
+              "reason": "spoken_line_start",
+              "lineId": "pilot-l2",
+              "speakerId": "corbeau",
+              "cue": null,
+              "source": "measured_utterance_start"
+            }
+          },
+          {
+            "n": 5,
+            "at": 8.238,
+            "seconds": 1.762,
+            "intent": "character_closeup",
+            "sync": {
+              "reason": "spoken_utterance_progression",
+              "lineId": "pilot-l2",
+              "speakerId": "corbeau",
+              "cue": null,
+              "source": "estimated_within_measured_utterance"
+            }
+          }
+        ]
+      },
+      {
+        "index": 2,
+        "start": 10,
+        "end": 15,
+        "images": 3,
+        "permitted": [
+          1,
+          3
+        ],
+        "covered": true,
+        "chosen": [
+          {
+            "n": 6,
+            "at": 10,
+            "seconds": 1.694,
+            "intent": "establishing_wide",
+            "sync": {
+              "reason": "spoken_utterance_progression",
+              "lineId": "pilot-l2",
+              "speakerId": "corbeau",
+              "cue": null,
+              "source": "estimated_within_measured_utterance"
+            }
+          },
+          {
+            "n": 7,
+            "at": 11.694,
+            "seconds": 2.52,
+            "intent": "speaker_reaction",
+            "sync": {
+              "reason": "spoken_line_start",
+              "lineId": "pilot-l3",
+              "speakerId": "renard",
+              "cue": null,
+              "source": "measured_utterance_start"
+            }
+          },
+          {
+            "n": 8,
+            "at": 14.214,
+            "seconds": 0.786,
+            "intent": "character_closeup",
+            "sync": {
+              "reason": "spoken_line_end",
+              "lineId": "pilot-l3",
+              "speakerId": "renard",
+              "cue": null,
+              "source": "scene_or_action_estimate"
+            }
+          }
+        ]
+      }
+    ],
+    "valid": true
+  },
+  "shots": [
+    {
+      "n": 0,
+      "windowIndex": 0,
+      "start": 0,
+      "duration": 2.17,
+      "beat": 0,
+      "subshot": 0,
+      "within": 3,
+      "intensity": 0.67,
+      "motion": "slow-hold",
+      "visualIntent": "establishing_wide",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l0",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "pilot-frame-1.jpg"
+    },
+    {
+      "n": 1,
+      "windowIndex": 0,
+      "start": 2.17,
+      "duration": 1.415,
+      "beat": 1,
+      "subshot": 1,
+      "within": 3,
+      "intensity": 0.8,
+      "motion": "pull-back",
+      "visualIntent": "speaker_reaction",
+      "audioSync": {
+        "reason": "spoken_line_start",
+        "lineId": "pilot-l1",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "measured_utterance_start"
+      },
+      "localImage": "v04-shot-01.jpg"
+    },
+    {
+      "n": 2,
+      "windowIndex": 0,
+      "start": 3.585,
+      "duration": 1.415,
+      "beat": 1,
+      "subshot": 2,
+      "within": 3,
+      "intensity": 0.8,
+      "motion": "tilt-up",
+      "visualIntent": "character_closeup",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l1",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "v04-shot-02.jpg"
+    },
+    {
+      "n": 3,
+      "windowIndex": 1,
+      "start": 5,
+      "duration": 1.476,
+      "beat": 1,
+      "subshot": 0,
+      "within": 3,
+      "intensity": 0.8,
+      "motion": "pan-right",
+      "visualIntent": "establishing_wide",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l1",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "pilot-frame-2.jpg"
+    },
+    {
+      "n": 4,
+      "windowIndex": 1,
+      "start": 6.476,
+      "duration": 1.762,
+      "beat": 2,
+      "subshot": 1,
+      "within": 3,
+      "intensity": 0.92,
+      "motion": "slow-hold",
+      "visualIntent": "speaker_reaction",
+      "audioSync": {
+        "reason": "spoken_line_start",
+        "lineId": "pilot-l2",
+        "speakerId": "corbeau",
+        "cue": null,
+        "source": "measured_utterance_start"
+      },
+      "localImage": "v04-shot-04.jpg"
+    },
+    {
+      "n": 5,
+      "windowIndex": 1,
+      "start": 8.238,
+      "duration": 1.762,
+      "beat": 2,
+      "subshot": 2,
+      "within": 3,
+      "intensity": 0.92,
+      "motion": "pan-left",
+      "visualIntent": "character_closeup",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l2",
+        "speakerId": "corbeau",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "v04-shot-05.jpg"
+    },
+    {
+      "n": 6,
+      "windowIndex": 2,
+      "start": 10,
+      "duration": 1.694,
+      "beat": 2,
+      "subshot": 0,
+      "within": 3,
+      "intensity": 0.92,
+      "motion": "push-in",
+      "visualIntent": "establishing_wide",
+      "audioSync": {
+        "reason": "spoken_utterance_progression",
+        "lineId": "pilot-l2",
+        "speakerId": "corbeau",
+        "cue": null,
+        "source": "estimated_within_measured_utterance"
+      },
+      "localImage": "v04-shot-06.jpg"
+    },
+    {
+      "n": 7,
+      "windowIndex": 2,
+      "start": 11.694,
+      "duration": 2.52,
+      "beat": 3,
+      "subshot": 1,
+      "within": 3,
+      "intensity": 0.23,
+      "motion": "pan-right",
+      "visualIntent": "speaker_reaction",
+      "audioSync": {
+        "reason": "spoken_line_start",
+        "lineId": "pilot-l3",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "measured_utterance_start"
+      },
+      "localImage": "pilot-frame-3.jpg"
+    },
+    {
+      "n": 8,
+      "windowIndex": 2,
+      "start": 14.214,
+      "duration": 0.786,
+      "beat": 3,
+      "subshot": 2,
+      "within": 3,
+      "intensity": 0.23,
+      "motion": "diagonal",
+      "visualIntent": "character_closeup",
+      "audioSync": {
+        "reason": "spoken_line_end",
+        "lineId": "pilot-l3",
+        "speakerId": "renard",
+        "cue": null,
+        "source": "scene_or_action_estimate"
+      },
+      "localImage": "pilot-frame-3.jpg"
+    }
+  ],
+  "lines": [
+    {
+      "id": "pilot-l0",
+      "speakerId": "renard",
+      "beatIndex": 0,
+      "text": "Bonsoir, je suis le Renard."
+    },
+    {
+      "id": "pilot-l1",
+      "speakerId": "renard",
+      "beatIndex": 1,
+      "text": "Tes baskets sont magnifiques ! Regarde là-haut, juste une seconde !"
+    },
+    {
+      "id": "pilot-l2",
+      "speakerId": "corbeau",
+      "beatIndex": 2,
+      "text": "Hé ! Mais où sont passées mes chaussures ?"
+    },
+    {
+      "id": "pilot-l3",
+      "speakerId": "renard",
+      "beatIndex": 3,
+      "text": "Les compliments coûtent parfois très cher !"
+    }
+  ],
+  "segments": [
+    {
+      "lineId": "pilot-l0",
+      "start": 0,
+      "end": 1.92
+    },
+    {
+      "lineId": "pilot-l1",
+      "start": 2.17,
+      "end": 6.226
+    },
+    {
+      "lineId": "pilot-l2",
+      "start": 6.476,
+      "end": 11.444
+    },
+    {
+      "lineId": "pilot-l3",
+      "start": 11.694,
+      "end": 14.214
+    }
+  ],
+  "narrative": "The Fox flatters the Crow's shoes and steals the shoebox",
+  "subtitleSource": "MAI Transcribe 2 verified utterances, word time approximated within measured line durations"
+}
