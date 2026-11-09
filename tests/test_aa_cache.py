@@ -92,4 +92,41 @@ class CacheTests(unittest.TestCase):
   self.assertEqual(len(self.original_endpoints),9)
   self.assertLessEqual(9*4,52)
 
+
+ def test_github_private_confirmation_allows_only_matching_private_repo(self):
+  from types import SimpleNamespace
+  repo=Path(self.temp.name)/"private-repo"
+  repo.mkdir()
+  calls=[]
+  def fake_run(argv,**kwargs):
+   calls.append(argv)
+   if argv[:3]==["git","remote","get-url"]:
+    return SimpleNamespace(returncode=0,stdout="https://github.com/fkom13/story-animator-bench-cache-private.git\n")
+   if argv[:3]==["git","credential","fill"]:
+    return SimpleNamespace(returncode=0,stdout="username=example\npassword=FAKE_TEST_CREDENTIAL\n")
+   raise AssertionError("unexpected command")
+  class FakeHTTP:
+   status=200
+   def __enter__(self):return self
+   def __exit__(self,*a):pass
+   def read(self,*a):return b'{"full_name":"fkom13/story-animator-bench-cache-private","private":true}'
+  with patch.object(aa.subprocess,"run",side_effect=fake_run), patch.object(aa,"urlopen",return_value=FakeHTTP()):
+   self.assertTrue(aa.github_private_verified(repo))
+  self.assertEqual(len(calls),2)
+
+ def test_public_visibility_must_fail_even_for_other_repo(self):
+  from types import SimpleNamespace
+  repo=Path(self.temp.name)/"private-repo"
+  repo.mkdir()
+  def fake_run(argv,**kwargs):
+   return SimpleNamespace(returncode=0,stdout=("https://github.com/fkom13/story-animator-bench-cache-private.git\n"
+    if argv[:3]==["git","remote","get-url"] else "username=example\npassword=FAKE_TEST_CREDENTIAL\n"))
+  class FakeHTTP:
+   status=200
+   def __enter__(self):return self
+   def __exit__(self,*a):pass
+   def read(self,*a):return b'{"full_name":"fkom13/story-animator-bench-cache-private","private":false}'
+  with patch.object(aa.subprocess,"run",side_effect=fake_run),patch.object(aa,"urlopen",return_value=FakeHTTP()):
+   self.assertFalse(aa.github_private_verified(repo))
+
 if __name__=="__main__":unittest.main(verbosity=2)
