@@ -1,0 +1,12 @@
+[Unit]
+Description=Refresh Story Animator licensed internal benchmarks every six hours
+
+[Timer]
+OnCalendar=*-*-* 00,06,12,18:12:00 UTC
+RandomizedDelaySec=600
+AccuracySec=1min
+Persistent=true
+Unit=story-animator-aa-cache.service
+
+[Install]
+WantedBy=timers.target

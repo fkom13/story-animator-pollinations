@@ -7,6 +7,6 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "node --test tests/director-v02.test.mjs tests/decision-fallback.test.mjs",
-    "check": "node scripts/build.mjs --check && node --check agent.ts && npm test"
+    "check": "node scripts/build.mjs --check && node --check agent.ts && npm test && python3 -m unittest discover -s tests -p test_aa_cache.py"
   }
 }

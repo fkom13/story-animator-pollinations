@@ -78,3 +78,7 @@ Exemple de structure souhaitée pour chaque candidat :
 ## État GitHub
 
 À conserver dans docs/engineering comme **work in progress**. Après tri, fabriquer une documentation multilingue et une annexe de benchmarks sous licences compatibles.
+
+## Actualisation centralisée et droits (2026-11-09)
+
+L API Artificial Analysis Free a 100 requêtes sur 24h par organisation/utilisateur et un usage interne uniquement. Le nouveau collecteur privé sur PC2 propose neuf familles × quatre passages par jour, soit 36 appels par 24h, avec verrou single-writer, garde quota et conservation des derniers résultats valides. Les snapshots complets sont conservés localement en privé et ne peuvent être poussés que vers un dépôt GitHub confirmé PRIVATE par l API REST. Le script et la configuration timer sont dans deploy/aa-cache-private ; non activés tant que le Secret Broker et le dépôt privé ne sont pas prêts. AUCUNE donnée AA brute ne doit être exposée à un utilisateur de l agent communautaire ; une licence Commercial serait requise avant redistribution. Les sources publiques restent ArtificialWatch, les métadonnées Pollinations et nos mesures propres.

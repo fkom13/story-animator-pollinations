@@ -106,3 +106,7 @@ Real local FFmpeg test: node tests/media-v02-validate.mjs
 GitHub: https://github.com/fkom13/story-animator-pollinations
 Pollinations: https://enter.pollinations.ai
 Official guide: https://github.com/pollinations/pollinations/blob/main/BUILD_YOUR_OWN_AGENT.md
+
+## Private internal benchmark cache (developer preview)
+
+The Artificial Analysis Free API is limited to 100 calls per 24 hours and is **internal-use-only**. A private six-hour caching collector with rate-limit guards and a GitHub-private-only upload check is described in [deploy/aa-cache-private/README.md](deploy/aa-cache-private/README.md). It is not enabled until both IACA Secret Brokers are configured and a verified private destination is prepared; raw AA rankings are **never** served to public Code Agent users or pushed into this public repository.

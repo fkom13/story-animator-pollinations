@@ -1,0 +1,19 @@
+[Unit]
+Description=Story Animator internal Artificial Analysis benchmark cache refresh (PRIVATE only)
+Documentation=https://artificialanalysis.ai/data-api/docs
+ConditionPathExists=%h/.config/story-animator/aa-key.cred
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/Desktop/oracle/story-animator-pollinations
+# Provision encrypted credential via IACA Connect broker and systemd-creds.
+LoadCredentialEncrypted=aa-key:%h/.config/story-animator/aa-key.cred
+Environment=AA_API_KEY_FILE=%d/aa-key
+Environment=AA_PRIVATE_GIT_DIR=%h/Desktop/oracle/story-animator-bench-cache-private
+ExecStart=/usr/bin/python3 %h/Desktop/oracle/story-animator-pollinations/scripts/aa_cache_refresh.py
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+TimeoutStartSec=300
+# Do not enable this service until GitHub private repo is verified and the
+# encrypted credential has been provisioned. No raw AA data in public Git.

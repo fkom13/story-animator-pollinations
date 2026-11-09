@@ -17,3 +17,8 @@ pilots/
 agent.v02.ts
 
 __pycache__/
+
+# Artificial Analysis private licensed cache: MUST NOT enter public source control
+/aa-cache-private/
+snapshots/
+*.cred
