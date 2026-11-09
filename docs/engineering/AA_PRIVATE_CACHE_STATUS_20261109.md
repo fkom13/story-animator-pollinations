@@ -40,3 +40,11 @@ Ces nombres ne sont pas des disponibilités sur Pollinations ni une permission p
 - python3 -m unittest discover -s tests -p test_aa_cache.py -v
 
 Les refresh réels utilisent le secret IACA par référence, sans l'exposer aux commandes persistantes, au modèle ou à GitHub.
+
+## Mise à jour du 9 novembre 2026, 03:08 UTC
+
+- Le dépôt `fkom13/story-animator-bench-cache-private` est désormais vérifié **PRIVATE=true** via GitHub API, droits de push confirmés.
+- Les **neuf** snapshots ont été effectivement copiés et synchronisés, commit privé `c388808`. GitHub API confirme les 9 fichiers JSON distants.
+- Une deuxième exécution sécurisée a montré `categories_updated=[]`, `errors={}`, `github_private=no_changes`, avec 90 appels restants : le cache chaud évite de consommer du quota.
+- Le timer PC2 demeure **loaded/inactive/disabled**. Le fichier de credentials système chiffré n’est pas encore provisionné, et aucune actualisation planifiée n’est revendiquée.
+- Le dépôt privé inclut une notice précisant la limitation **internal use only** ; ne jamais modifier sa visibilité sans revoir les droits Artificial Analysis.
