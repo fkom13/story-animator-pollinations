@@ -1,0 +1,19 @@
+{
+  "video": "/tmp/story-animator-audio-real-smoke/quest-human-fable-pilot-15s-v2-subtitles.mp4",
+  "codec": "h264+aac",
+  "resolution": "720x1280",
+  "duration": "15.000000",
+  "size": "1060193",
+  "sha256": "27440e27e2ddd3a5c545e54558a571ae685fe7b51333d9dbc0d9e84982242d9c",
+  "playRes": "720x1280",
+  "fontPx": 35,
+  "captions": 5,
+  "maxLines": 2,
+  "placement": "bottom, last scene top",
+  "qa": {
+    "decode_ok": true,
+    "snapshots": 5,
+    "visual_review_pending": true
+  },
+  "paid_requests_during_rerender": 0
+}

@@ -1,0 +1,20 @@
+[Script Info]
+Title: Story Animator Responsive Captions
+ScriptType: v4.00+
+PlayResX: 720
+PlayResY: 1280
+ScaledBorderAndShadow: yes
+WrapStyle: 2
+YCbCr Matrix: TV.709
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: SceneCaption,DejaVu Sans,35,&H00FFFFFF,&H00FFFFFF,&H00000000,&H8B000000,-1,0,0,0,100,100,0,0,3,10,0,2,65,65,155,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:01.92,SceneCaption,,0,0,0,,{\an2\pos(360,1118)\q2}{\c&H007BEBFF&}Renard:{\c&H00FFFFFF&} Bonsoir, je suis le\Nrenard.
+Dialogue: 0,0:00:02.17,0:00:04.52,SceneCaption,,0,0,0,,{\an2\pos(360,1118)\q2}{\c&H007BEBFF&}Renard:{\c&H00FFFFFF&} Tes baskets sont\Nmagnifiques ! Regarde
+Dialogue: 0,0:00:04.52,0:00:06.23,SceneCaption,,0,0,0,,{\an2\pos(360,1118)\q2}{\c&H007BEBFF&}Renard:{\c&H00FFFFFF&} là-haut, juste une\Nseconde.
+Dialogue: 0,0:00:06.48,0:00:11.44,SceneCaption,,0,0,0,,{\an2\pos(360,1118)\q2}{\c&H007BEBFF&}Corbeau:{\c&H00FFFFFF&} Hey ! Mais où sont\Npassées mes chaussures ?
+Dialogue: 0,0:00:11.69,0:00:14.21,SceneCaption,,0,0,0,,{\an8\pos(360,120)\q2}{\c&H007BEBFF&}Renard:{\c&H00FFFFFF&} Les compliments\Ncoûtent parfois très cher.
