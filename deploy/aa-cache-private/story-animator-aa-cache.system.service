@@ -1,0 +1,23 @@
+[Unit]
+Description=Story Animator private Artificial Analysis benchmark refresh (system credential)
+Documentation=https://artificialanalysis.ai/data-api/docs
+ConditionPathExists=/etc/credstore.encrypted/story-animator-aa-key.cred
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=fkomp
+Group=fkomp
+WorkingDirectory=/home/fkomp/Desktop/oracle/story-animator-pollinations
+LoadCredentialEncrypted=aa-key:/etc/credstore.encrypted/story-animator-aa-key.cred
+Environment=AA_API_KEY_FILE=%d/aa-key
+Environment=AA_PRIVATE_GIT_DIR=/home/fkomp/Desktop/oracle/story-animator-bench-cache-private
+ExecStart=/usr/bin/python3 /home/fkomp/Desktop/oracle/story-animator-pollinations/scripts/aa_cache_refresh.py
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+TimeoutStartSec=300
+
+# Only the collector sees the decrypted credential. Github upload is refused
+# unless REST confirms private=true for the configured repository.
